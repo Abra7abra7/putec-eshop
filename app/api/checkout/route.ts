@@ -6,6 +6,14 @@ import Stripe from 'stripe';
 export async function POST(req: Request) {
   try {
     const { items } = (await req.json()) as { items: CartItem[] };
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+
+    if (!appUrl) {
+      console.error('NEXT_PUBLIC_APP_URL is not set');
+      return new NextResponse('Application URL is not configured', {
+        status: 500,
+      });
+    }
 
     if (!items || items.length === 0) {
       return new NextResponse('No items in cart', { status: 400 });
@@ -28,13 +36,17 @@ export async function POST(req: Request) {
       payment_method_types: ['card'],
       line_items,
       mode: 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dakujeme?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/kosik`,
+      success_url: `${appUrl}/dakujeme?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${appUrl}/kosik`,
     });
 
     return NextResponse.json({ url: session.url });
-  } catch (error) {
+  } catch (error: unknown) {
+    let errorMessage = 'Internal Server Error';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
     console.error('[STRIPE_CHECKOUT_ERROR]', error);
-    return new NextResponse('Internal Server Error', { status: 500 });
+    return new NextResponse(errorMessage, { status: 500 });
   }
 }
