@@ -42,6 +42,7 @@ export async function POST(req: Request) {
           status: 'paid', // Predpokladáme, že 'paid' je platná hodnota
           payment_method: 'card', // Predpokladáme, že 'card' je platná hodnota
           customer_details: session.customer_details,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           shipping_details: (session as any).shipping_details || {},
         })
         .select('id') // Potrebujeme len ID novej objednávky
