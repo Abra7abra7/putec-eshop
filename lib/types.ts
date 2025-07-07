@@ -16,5 +16,5 @@ export type Product = {
   year: number | null; // integer
   wine_region: string | null; // text
   alcohol_percentage: number | null; // numeric(4, 1)
-  attributes: Record<string, any> | null; // jsonb
+  attributes: Record<string, unknown> | null; // jsonb
 };
