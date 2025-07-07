@@ -4,35 +4,15 @@ import { useCartStore, CartItem } from '@/hooks/use-cart-store';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Plus, Minus } from 'lucide-react';
 
 export default function KosikPage() {
   const { items, removeItem, clearCart, addItem, decreaseQuantity } = useCartStore();
-  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const router = useRouter();
 
-  const handleCheckout = async () => {
-    setIsCheckingOut(true);
-    try {
-      const response = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ items }),
-      });
-
-      const { url } = await response.json();
-      if (url) {
-        window.location.href = url;
-      } else {
-        console.error('Failed to create Stripe checkout session.');
-        // Tu by sa v reálnej aplikácii zobrazila notifikácia pre používateľa
-      }
-    } catch (error) {
-      console.error('Checkout error:', error);
-    } finally {
-      setIsCheckingOut(false);
-    }
+  const handleCheckout = () => {
+    router.push('/pokladna');
   };
 
   const totalPrice = items.reduce((total: number, item: CartItem) => {
@@ -98,8 +78,8 @@ export default function KosikPage() {
               <span>Celkom</span>
               <span>{totalPrice.toFixed(2)} €</span>
             </div>
-                        <Button className="w-full mt-6" onClick={handleCheckout} disabled={isCheckingOut || items.length === 0}>
-              {isCheckingOut ? 'Spracúva sa...' : 'Pokračovať do pokladne'}
+                        <Button className="w-full mt-6" onClick={handleCheckout} disabled={items.length === 0}>
+              Pokračovať do pokladne
             </Button>
             <Button variant="outline" className="w-full mt-2" onClick={clearCart}>Vyprázdniť košík</Button>
           </div>

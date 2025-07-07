@@ -3,9 +3,32 @@ import { stripe } from '@/lib/stripe';
 import { CartItem } from '@/hooks/use-cart-store';
 import Stripe from 'stripe';
 
+// Typ pre dáta z formulára, mal by zodpovedať Zod schéme na frontende
+interface CustomerDetails {
+  customerType: 'individual' | 'company';
+  email: string;
+  phone: string;
+  firstName: string;
+  lastName: string;
+  companyName?: string;
+  ico?: string;
+  dic?: string;
+  icDph?: string;
+  deliveryMethod: 'pickup' | 'delivery';
+  shippingStreet?: string;
+  shippingCity?: string;
+  shippingZip?: string;
+}
+
+interface RequestBody {
+  cartItems: CartItem[];
+  customerDetails: CustomerDetails;
+  deliveryCost: number;
+}
+
 export async function POST(req: Request) {
   try {
-    const { items } = (await req.json()) as { items: CartItem[] };
+    const { cartItems, customerDetails, deliveryCost } = (await req.json()) as RequestBody;
     const appUrl = process.env.NEXT_PUBLIC_APP_URL;
 
     if (!appUrl) {
@@ -15,11 +38,11 @@ export async function POST(req: Request) {
       });
     }
 
-    if (!items || items.length === 0) {
+    if (!cartItems || cartItems.length === 0) {
       return new NextResponse('No items in cart', { status: 400 });
     }
 
-    const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = items.map(
+    const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = cartItems.map(
       (item: CartItem) => ({
         price_data: {
           currency: 'eur',
@@ -32,14 +55,30 @@ export async function POST(req: Request) {
       })
     );
 
-        const metadata = {
+    // Pridanie dopravy ako samostatnej položky, ak je cena > 0
+    if (deliveryCost > 0) {
+      line_items.push({
+        price_data: {
+          currency: 'eur',
+          product_data: {
+            name: 'Doprava a balné',
+          },
+          unit_amount: Math.round(deliveryCost * 100),
+        },
+        quantity: 1,
+      });
+    }
+
+    // Uloženie všetkých potrebných dát do metadát
+    const metadata = {
       cart: JSON.stringify(
-        items.map((item) => ({
+        cartItems.map((item) => ({
           productId: item.product.id,
           quantity: item.quantity,
-          price: item.product.price, // Uloženie ceny v čase nákupu
+          price: item.product.price,
         }))
       ),
+      customerDetails: JSON.stringify(customerDetails),
     };
 
     const session = await stripe.checkout.sessions.create({
@@ -47,8 +86,9 @@ export async function POST(req: Request) {
       line_items,
       mode: 'payment',
       success_url: `${appUrl}/dakujeme?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${appUrl}/kosik`,
-      metadata: metadata,
+      cancel_url: `${appUrl}/pokladna`, // Návrat do pokladne, nie do košíka
+      customer_email: customerDetails.email, // Predvyplnenie e-mailu
+      metadata,
     });
 
     return NextResponse.json({ url: session.url });

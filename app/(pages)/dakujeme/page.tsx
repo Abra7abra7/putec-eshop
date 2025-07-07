@@ -2,6 +2,8 @@ import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+export const dynamic = 'force-dynamic'; // Vynúti dynamické renderovanie
+
 // Definovanie typov pre lepšiu prácu s dátami
 type OrderItem = {
   quantity: number;
@@ -42,8 +44,8 @@ async function getOrder(sessionId: string): Promise<Order | null> {
 }
 
 // Komponent stránky
-export default async function DakujemePage({ searchParams }: { searchParams: { session_id?: string } }) {
-  const sessionId = searchParams.session_id;
+export default async function DakujemePage({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
+  const sessionId = typeof searchParams.session_id === 'string' ? searchParams.session_id : null;
 
   if (!sessionId) {
     return notFound(); // Ak chýba session_id, zobrazíme 404

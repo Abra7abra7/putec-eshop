@@ -5,6 +5,7 @@ export type Product = {
   created_at: string; // timestamptz
   updated_at: string; // timestamptz
   name: string; // text
+  slug: string; // text
   description: string | null; // text
   price: number; // numeric(10, 2)
   stock: number; // integer

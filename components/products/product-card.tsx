@@ -24,29 +24,52 @@ export const ProductCard = ({ product }: ProductCardProps) => {
 
   return (
     <div className="border rounded-lg overflow-hidden group">
-      <Link href={`/vino/${product.id}`}>
-        <div className="relative w-full h-64 bg-gray-200">
-          {product.image_url ? (
-            <Image
-              src={product.image_url}
-              alt={product.name}
-              fill={true}
-              style={{objectFit: 'cover'}}
-              className="transition-transform duration-300 group-hover:scale-105"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-500">
-              Obrázok nie je k dispozícii
-            </div>
-          )}
-        </div>
-      </Link>
+      <div className="relative w-full h-64 bg-gray-200">
+        {product.slug ? (
+            <Link href={`/vino/${product.slug}`}>
+                {product.image_url ? (
+                    <Image
+                    src={product.image_url}
+                    alt={product.name}
+                    fill={true}
+                    style={{objectFit: 'cover'}}
+                    className="transition-transform duration-300 group-hover:scale-105"
+                    />
+                ) : (
+                    <div className="w-full h-full flex items-center justify-center text-gray-500">
+                    Obrázok nie je k dispozícii
+                    </div>
+                )}
+            </Link>
+        ) : (
+            <>
+                {product.image_url ? (
+                    <Image
+                    src={product.image_url}
+                    alt={product.name}
+                    fill={true}
+                    style={{objectFit: 'cover'}}
+                    />
+                ) : (
+                    <div className="w-full h-full flex items-center justify-center text-gray-500">
+                    Obrázok nie je k dispozícii
+                    </div>
+                )}
+            </>
+        )}
+      </div>
       <div className="p-4">
-        <h3 className="text-lg font-semibold truncate">{product.name}</h3>
+        {product.slug ? (
+          <Link href={`/vino/${product.slug}`}>
+            <h3 className="text-lg font-semibold truncate hover:underline">{product.name}</h3>
+          </Link>
+        ) : (
+          <h3 className="text-lg font-semibold truncate">{product.name}</h3>
+        )}
         <p className="text-sm text-muted-foreground mt-1">{product.year} | {product.wine_region}</p>
         <div className="flex items-center justify-between mt-4">
           <p className="text-xl font-bold">{product.price.toFixed(2)} €</p>
-                    {cartItem ? (
+          {cartItem ? (
             <div className="flex items-center gap-2">
               <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => decreaseQuantity(product.id)}>
                 <Minus className="h-4 w-4" />
