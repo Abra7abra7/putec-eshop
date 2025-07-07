@@ -69,12 +69,12 @@ export async function POST(req: Request) {
       console.log(`Order ${order.id} created successfully.`);
 
     } catch (dbError: unknown) {
-      let message = 'Database error';
-      if (dbError instanceof Error) {
-        message = dbError.message;
-      }
-      console.error('[DB_INSERT_ERROR]', message);
-      return new NextResponse(`Database Error: ${message}`, { status: 500 });
+      // Log the full, detailed error object to Vercel logs
+      console.error('[DB_INSERT_ERROR]', JSON.stringify(dbError, null, 2));
+
+      // Return a more detailed error in the response for easier debugging
+      const errorMessage = dbError instanceof Error ? dbError.message : 'An unknown error occurred';
+      return new NextResponse(`Database Error: ${errorMessage}. Details: ${JSON.stringify(dbError)}`, { status: 500 });
     }
   }
 
