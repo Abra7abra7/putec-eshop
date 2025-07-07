@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import Stripe from 'stripe';
 import { createClient } from '@/lib/supabase/server';
+import { Resend } from 'resend';
+import OrderConfirmationEmail from '@/emails/OrderConfirmationEmail';
 
 type CartItemMetadata = {
   productId: string;
@@ -65,6 +67,53 @@ export async function POST(req: Request) {
       if (itemsError) throw itemsError;
 
       console.log(`Order ${order.id} created successfully.`);
+
+      // --- Odoslanie potvrdzujúceho e-mailu ---
+      if (session.customer_details?.email) {
+        try {
+          const resend = new Resend(process.env.RESEND_API_KEY);
+          
+          // Potrebujeme načítať názvy produktov, pretože ich nemáme v metadátach
+          const productIds = cartItems.map(item => item.productId);
+          const { data: products, error: productsError } = await supabase
+            .from('products')
+            .select('id, name')
+            .in('id', productIds);
+
+          if (productsError) throw productsError;
+
+          const orderItemsWithNames = cartItems.map(item => {
+            const product = products.find(p => p.id === item.productId);
+            return {
+              ...item,
+              name: product?.name || 'Neznámy produkt',
+              price_per_unit: item.price,
+            };
+          });
+
+          await resend.emails.send({
+            from: 'Putec Eshop <noreply@vlozte-vasu-overenu-domenu.sk>', // DÔLEŽITÉ: Nahraďte 'vlozte-vasu-overenu-domenu.sk' vašou doménou overenou v Resend
+            to: [session.customer_details.email],
+            subject: `Potvrdenie objednávky č. ${order.id}`,
+            react: OrderConfirmationEmail({
+              orderId: order.id,
+              orderDate: new Date().toLocaleDateString('sk-SK'),
+              customerName: session.customer_details.name || '',
+              orderItems: orderItemsWithNames,
+              totalPrice: totalPrice,
+            }),
+          });
+
+          console.log(`Confirmation email sent for order ${order.id}`);
+
+        } catch (emailError: unknown) {
+          console.error('[EMAIL_SEND_ERROR]', JSON.stringify(emailError, null, 2));
+          // Nechceme, aby chyba pri odosielaní e-mailu zhodila celý proces,
+          // takže ju len zalogujeme a pokračujeme.
+        }
+      } else {
+        console.log('Customer details or email not found, skipping confirmation email.');
+      }
 
     } catch (dbError: unknown) {
       console.error('[DB_INSERT_ERROR]', JSON.stringify(dbError, null, 2));
