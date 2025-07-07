@@ -1,5 +1,6 @@
-import Link from "next/link";
-import { AuthButton } from "@/components/auth-button";
+import Link from 'next/link';
+import { AuthButton } from '@/components/auth-button';
+import { CartButton } from './cart-button';
 
 export const Header = () => {
   return (
@@ -9,14 +10,13 @@ export const Header = () => {
           Pútec
         </Link>
         <nav className="hidden items-center space-x-6 text-sm font-medium md:flex">
-          <Link href="/vino" className="transition-colors hover:text-foreground/80 text-foreground/60">Vína</Link>
-          <Link href="/prislusenstvo" className="transition-colors hover:text-foreground/80 text-foreground/60">Príslušenstvo</Link>
-          <Link href="/zazitky" className="transition-colors hover:text-foreground/80 text-foreground/60">Zážitky</Link>
-          <Link href="/ubytovanie" className="transition-colors hover:text-foreground/80 text-foreground/60">Ubytovanie</Link>
+          <Link href="/vino" className="transition-colors hover:text-foreground/80">E-shop</Link>
+          <Link href="/zazitky" className="transition-colors hover:text-foreground/80">Degustácie</Link>
+          <Link href="/ubytovanie" className="transition-colors hover:text-foreground/80">Ubytovanie</Link>
         </nav>
-        <div className="flex items-center gap-4">
-            <Link href="/kosik" className="transition-colors hover:text-foreground/80 text-foreground/60">Košík</Link>
-            <AuthButton />
+        <div className="flex items-center gap-2">
+          <CartButton />
+          <AuthButton />
         </div>
       </div>
     </header>

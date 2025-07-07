@@ -4,14 +4,23 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Product } from '@/lib/types';
 import { Button } from '@/components/ui/button';
-import { useCartStore, CartState } from '@/hooks/use-cart-store';
+import { toast } from 'sonner';
+import { useCartStore, CartState, CartItem } from '@/hooks/use-cart-store';
+import { Plus, Minus } from 'lucide-react';
 
 interface ProductCardProps {
   product: Product;
 }
 
 export const ProductCard = ({ product }: ProductCardProps) => {
-    const addItemToCart = useCartStore((state: CartState) => state.addItem);
+  const { items, addItem, decreaseQuantity } = useCartStore();
+
+  const cartItem = items.find((item: CartItem) => item.product.id === product.id);
+
+  const handleAddToCart = () => {
+    addItem(product);
+    toast.success(`${product.name} bol pridaný do košíka.`);
+  };
 
   return (
     <div className="border rounded-lg overflow-hidden group">
@@ -37,7 +46,19 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         <p className="text-sm text-muted-foreground mt-1">{product.year} | {product.wine_region}</p>
         <div className="flex items-center justify-between mt-4">
           <p className="text-xl font-bold">{product.price.toFixed(2)} €</p>
-          <Button onClick={() => addItemToCart(product)}>Do košíka</Button>
+                    {cartItem ? (
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => decreaseQuantity(product.id)}>
+                <Minus className="h-4 w-4" />
+              </Button>
+              <span className="font-bold text-lg w-5 text-center">{cartItem.quantity}</span>
+              <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => addItem(product)}>
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+          ) : (
+            <Button onClick={handleAddToCart}>Do košíka</Button>
+          )}
         </div>
       </div>
     </div>

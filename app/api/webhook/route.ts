@@ -43,6 +43,7 @@ export async function POST(req: Request) {
           total_price: totalPrice,
           status: 'paid', // Predpokladáme, že 'paid' je platná hodnota
           payment_method: 'stripe', // Použijeme správnu hodnotu z enum
+          stripe_session_id: session.id,
           customer_details: session.customer_details,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           shipping_details: (session as any).shipping_details || {},

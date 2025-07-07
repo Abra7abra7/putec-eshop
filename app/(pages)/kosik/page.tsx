@@ -4,9 +4,10 @@ import { useCartStore, CartItem } from '@/hooks/use-cart-store';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
+import { Plus, Minus } from 'lucide-react';
 
 export default function KosikPage() {
-  const { items, removeItem, clearCart } = useCartStore();
+  const { items, removeItem, clearCart, addItem, decreaseQuantity } = useCartStore();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const handleCheckout = async () => {
@@ -62,7 +63,15 @@ export default function KosikPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold">{product.name}</h3>
-                  <p className="text-sm text-muted-foreground">Množstvo: {quantity}</p>
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" size="icon" className="h-6 w-6" onClick={() => decreaseQuantity(product.id)}>
+                      <Minus className="h-4 w-4" />
+                    </Button>
+                    <span className="font-medium w-4 text-center">{quantity}</span>
+                    <Button variant="outline" size="icon" className="h-6 w-6" onClick={() => addItem(product)}>
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               </div>
               <div className="flex items-center gap-4">
