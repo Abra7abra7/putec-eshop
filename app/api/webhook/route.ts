@@ -92,7 +92,7 @@ export async function POST(req: Request) {
           });
 
           await resend.emails.send({
-            from: 'Putec Eshop <noreply@vlozte-vasu-overenu-domenu.sk>', // DÔLEŽITÉ: Nahraďte 'vlozte-vasu-overenu-domenu.sk' vašou doménou overenou v Resend
+            from: 'Putec Eshop <onboarding@resend.dev>', // Pre testovanie používame Resend onboarding doménu
             to: [session.customer_details.email],
             subject: `Potvrdenie objednávky č. ${order.id}`,
             react: OrderConfirmationEmail({
