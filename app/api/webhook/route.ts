@@ -40,7 +40,7 @@ export async function POST(req: Request) {
         .insert({
           total_price: totalPrice,
           status: 'paid', // Predpokladáme, že 'paid' je platná hodnota
-          payment_method: 'card', // Predpokladáme, že 'card' je platná hodnota
+          payment_method: 'stripe', // Použijeme správnu hodnotu z enum
           customer_details: session.customer_details,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           shipping_details: (session as any).shipping_details || {},
