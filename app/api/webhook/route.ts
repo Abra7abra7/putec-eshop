@@ -1,8 +1,13 @@
-import Stripe from 'stripe';
 import { NextResponse } from 'next/server';
-
-
 import { stripe } from '@/lib/stripe';
+import Stripe from 'stripe';
+import { createClient } from '@/lib/supabase/server';
+
+type CartItemMetadata = {
+  productId: string;
+  quantity: number;
+  price: number;
+};
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -24,30 +29,54 @@ export async function POST(req: Request) {
     return new NextResponse(`Webhook Error: ${message}`, { status: 400 });
   }
 
-  const session = event.data.object as Stripe.Checkout.Session;
-
-  // Handle the checkout.session.completed event
   if (event.type === 'checkout.session.completed') {
-    // Retrieve the subscription details from Stripe.
-    // const subscription = await stripe.subscriptions.retrieve(
-    //   session.subscription as string
-    // );
+    const session = event.data.object as Stripe.Checkout.Session;
+    const supabase = await createClient();
 
-    // Update the user stripe into in our database.
-    // Since this is a one-time payment, we will just log it for now.
-    console.log('✅ Payment successful!', session);
+    try {
+      const cartItems: CartItemMetadata[] = JSON.parse(
+        session.metadata?.cart || '[]'
+      );
+      const customerEmail = session.customer_details?.email;
+      const totalPrice = (session.amount_total || 0) / 100;
 
-    // TODO: Create order in your database.
+      const { data: order, error: orderError } = await supabase
+        .from('orders')
+        .insert({
+          total_price: totalPrice,
+          customer_email: customerEmail,
+          stripe_session_id: session.id,
+          is_paid: true,
+        })
+        .select()
+        .single();
+
+      if (orderError) throw orderError;
+
+      const orderItemsToInsert = cartItems.map((item) => ({
+        order_id: order.id,
+        product_id: item.productId,
+        quantity: item.quantity,
+        price_at_purchase: item.price,
+      }));
+
+      const { error: itemsError } = await supabase
+        .from('order_items')
+        .insert(orderItemsToInsert);
+
+      if (itemsError) throw itemsError;
+
+      console.log(`Order ${order.id} created successfully.`);
+
+    } catch (dbError: unknown) {
+      let message = 'Database error';
+      if (dbError instanceof Error) {
+        message = dbError.message;
+      }
+      console.error('[DB_INSERT_ERROR]', message);
+      return new NextResponse(`Database Error: ${message}`, { status: 500 });
+    }
   }
-
-  // Handle other event types
-  // switch (event.type) {
-  //   case 'invoice.payment_succeeded':
-  //     // ...
-  //     break;
-  //   default:
-  //     console.log(`Unhandled event type ${event.type}`);
-  // }
 
   return new NextResponse(null, { status: 200 });
 }

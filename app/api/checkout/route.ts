@@ -32,12 +32,23 @@ export async function POST(req: Request) {
       })
     );
 
+        const metadata = {
+      cart: JSON.stringify(
+        items.map((item) => ({
+          productId: item.product.id,
+          quantity: item.quantity,
+          price: item.product.price, // Uloženie ceny v čase nákupu
+        }))
+      ),
+    };
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items,
       mode: 'payment',
       success_url: `${appUrl}/dakujeme?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${appUrl}/kosik`,
+      metadata: metadata,
     });
 
     return NextResponse.json({ url: session.url });
