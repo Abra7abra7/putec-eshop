@@ -22,10 +22,7 @@ export async function POST(req: Request) {
       process.env.STRIPE_WEBHOOK_SECRET!
     );
   } catch (err: unknown) {
-    let message = 'Unknown error';
-    if (err instanceof Error) {
-      message = err.message;
-    }
+    const message = err instanceof Error ? err.message : 'Unknown error';
     return new NextResponse(`Webhook Error: ${message}`, { status: 400 });
   }
 
@@ -34,30 +31,30 @@ export async function POST(req: Request) {
     const supabase = await createClient();
 
     try {
-      const cartItems: CartItemMetadata[] = JSON.parse(
-        session.metadata?.cart || '[]'
-      );
-      const customerEmail = session.customer_details?.email;
+      const cartItems: CartItemMetadata[] = JSON.parse(session.metadata?.cart || '[]');
       const totalPrice = (session.amount_total || 0) / 100;
 
+      // 1. Vytvorenie záznamu v tabuľke 'orders' podľa novej schémy
       const { data: order, error: orderError } = await supabase
         .from('orders')
         .insert({
           total_price: totalPrice,
-          customer_email: customerEmail,
-          stripe_session_id: session.id,
-          is_paid: true,
+          status: 'paid', // Predpokladáme, že 'paid' je platná hodnota
+          payment_method: 'card', // Predpokladáme, že 'card' je platná hodnota
+          customer_details: session.customer_details,
+          shipping_details: (session as any).shipping_details || {},
         })
-        .select()
+        .select('id') // Potrebujeme len ID novej objednávky
         .single();
 
       if (orderError) throw orderError;
 
+      // 2. Vytvorenie záznamov v tabuľke 'order_items'
       const orderItemsToInsert = cartItems.map((item) => ({
         order_id: order.id,
         product_id: item.productId,
         quantity: item.quantity,
-        price_at_purchase: item.price,
+        price_per_unit: item.price, // Použijeme správny názov stĺpca
       }));
 
       const { error: itemsError } = await supabase
@@ -69,10 +66,7 @@ export async function POST(req: Request) {
       console.log(`Order ${order.id} created successfully.`);
 
     } catch (dbError: unknown) {
-      // Log the full, detailed error object to Vercel logs
       console.error('[DB_INSERT_ERROR]', JSON.stringify(dbError, null, 2));
-
-      // Return a more detailed error in the response for easier debugging
       const errorMessage = dbError instanceof Error ? dbError.message : 'An unknown error occurred';
       return new NextResponse(`Database Error: ${errorMessage}. Details: ${JSON.stringify(dbError)}`, { status: 500 });
     }
