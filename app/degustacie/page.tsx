@@ -26,9 +26,15 @@ export default function DegustaciePage() {
   ];
 
   const galleryImages = [
-    { src: 'https://images.unsplash.com/photo-1587882043687-3c5a6d3855e8?q=80&w=2070&auto=format&fit=crop', alt: 'Atmosféra degustácie' },
-    { src: 'https://images.unsplash.com/photo-1506377295352-e3154d43ea9e?q=80&w=2070&auto=format&fit=crop', alt: 'Poháre s vínom' },
-    { src: 'https://images.unsplash.com/photo-1568213816243-51931b1f9642?q=80&w=1974&auto=format&fit=crop', alt: 'Detail na víno a syr' },
+    { src: '/images/degustacie/Brano-degustácia-x.webp', alt: 'Degustácia s vinárom' },
+    { src: '/images/degustacie/IMG_5508-6-x.webp', alt: 'Poháre s vínom pripravené na degustáciu' },
+    { src: '/images/degustacie/degustačná-x.webp', alt: 'Priestory degustačnej miestnosti' },
+    { src: '/images/degustacie/degustácia-brano-x.webp', alt: 'Vinár Braňo pri výklade' },
+    { src: '/images/degustacie/degustácia-x.webp', alt: 'Detail na nalievanie vína' },
+    { src: '/images/degustacie/jama-x.webp', alt: 'Vstup do vínnej pivnice' },
+    { src: '/images/degustacie/misa-x.webp', alt: 'Občerstvenie k degustácii' },
+    { src: '/images/degustacie/ruky-x.webp', alt: 'Detail na ruky s pohárom vína' },
+    { src: '/images/degustacie/sudy-x.webp', alt: 'Drevené sudy v pivnici' },
   ];
 
   const faqData = [
@@ -92,8 +98,8 @@ export default function DegustaciePage() {
                         <Image 
                             src={image.src} 
                             alt={image.alt} 
-                            layout="fill" 
-                            objectFit="cover" 
+                            fill
+                            style={{ objectFit: "cover" }} 
                             className="transition-transform duration-300 group-hover:scale-110"
                         />
                     </div>

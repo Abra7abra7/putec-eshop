@@ -9,13 +9,13 @@ export default function UbytovaniePage() {
       nazov: 'Dvojlôžková izba Standard',
       popis: 'Útulná izba pre dve osoby s manželskou posteľou, modernou kúpeľňou a výhľadom do tichého dvora. Ideálna pre páry hľadajúce pokojný oddych po dni strávenom degustáciou.',
       cena: 'od 70 € / noc',
-      obrazok: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=2070&auto=format&fit=crop',
+      obrazok: '/images/ubytovanie/Izba interier.webp',
     },
     {
       nazov: 'Apartmán s výhľadom na vinice',
       popis: 'Priestranný apartmán s oddelenou spálňou, plne vybavenou kuchynkou, obývacou časťou a súkromným balkónom s nádherným výhľadom priamo na naše vinice. Dokonalá voľba pre náročnejších hostí.',
       cena: 'od 110 € / noc',
-      obrazok: 'https://images.unsplash.com/photo-1585412727339-3490d9d68e8e?q=80&w=2070&auto=format&fit=crop',
+      obrazok: '/images/ubytovanie/IMG_5835.webp',
     },
   ];
 
@@ -30,9 +30,15 @@ export default function UbytovaniePage() {
   ];
 
   const galleryImages = [
-    { src: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=2070&auto=format&fit=crop', alt: 'Interiér izby' },
-    { src: 'https://images.unsplash.com/photo-1590490359854-dfba5d72b66b?q=80&w=1974&auto=format&fit=crop', alt: 'Detail postele a dekorácií' },
-    { src: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?q=80&w=1974&auto=format&fit=crop', alt: 'Moderná kúpeľňa' },
+    { src: '/images/ubytovanie/Altánok.webp', alt: 'Altánok s posedením' },
+    { src: '/images/ubytovanie/dvor s kostolom.webp', alt: 'Pohľad na dvor s kostolom v pozadí' },
+    { src: '/images/ubytovanie/dvor so sudom.webp', alt: 'Dvor s dreveným sudom' },
+    { src: '/images/ubytovanie/Kuchyna linka.webp', alt: 'Detail kuchynskej linky v apartmáne' },
+    { src: '/images/ubytovanie/degustačná.webp', alt: 'Priestory degustačnej miestnosti' },
+    { src: '/images/ubytovanie/IMG_5787.webp', alt: 'Interiér ubytovania' },
+    { src: '/images/ubytovanie/kuchyna.webp', alt: 'Plne vybavená kuchynka v apartmáne' },
+    { src: '/images/ubytovanie/IMG_6011-2.webp', alt: 'Pohľad na vinárstvo z diaľky' },
+    { src: '/images/ubytovanie/foto pás.webp', alt: 'Koláž fotiek z vinárstva' },
   ];
 
   const faqData = [
@@ -59,7 +65,7 @@ export default function UbytovaniePage() {
           {izby.map((izba) => (
             <div key={izba.nazov} className="border rounded-xl overflow-hidden flex flex-col transition-all duration-300 hover:shadow-lg hover:border-primary/50 bg-card">
               <div className="relative w-full h-64 bg-muted">
-                <Image src={izba.obrazok} alt={izba.nazov} layout="fill" objectFit="cover" />
+                <Image src={izba.obrazok} alt={izba.nazov} fill style={{ objectFit: 'cover' }} />
               </div>
               <div className="p-6 flex flex-col flex-grow">
                 <h3 className="text-2xl font-semibold mb-2 text-primary/90">{izba.nazov}</h3>
