@@ -23,64 +23,49 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   };
 
   return (
-    <div className="border rounded-lg overflow-hidden group">
-      <div className="relative w-full h-64 bg-gray-200">
-        {product.slug ? (
-            <Link href={`/vino/${product.slug}`}>
-                {product.image_url ? (
-                    <Image
-                    src={product.image_url}
-                    alt={product.name}
-                    fill={true}
-                    style={{objectFit: 'cover'}}
-                    className="transition-transform duration-300 group-hover:scale-105"
-                    />
-                ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-500">
-                    Obrázok nie je k dispozícii
-                    </div>
-                )}
+    <div className="bg-card text-card-foreground rounded-xl border flex flex-col overflow-hidden group transition-all duration-300 hover:shadow-lg hover:scale-[1.02]">
+      <Link href={product.slug ? `/vino/${product.slug}` : '#'} className="block overflow-hidden">
+        <div className="relative w-full aspect-square bg-muted">
+          {product.image_url ? (
+            <Image
+              src={product.image_url}
+              alt={product.name}
+              fill
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+              Obrázok chýba
+            </div>
+          )}
+        </div>
+      </Link>
+      <div className="p-4 flex flex-col flex-grow">
+        <div className="flex-grow mb-4">
+          <p className="text-sm text-muted-foreground">{product.year} | {product.wine_region}</p>
+          <h3 className="text-lg font-semibold truncate mt-1">
+            <Link href={product.slug ? `/vino/${product.slug}` : '#'} className="hover:underline">
+              {product.name}
             </Link>
-        ) : (
-            <>
-                {product.image_url ? (
-                    <Image
-                    src={product.image_url}
-                    alt={product.name}
-                    fill={true}
-                    style={{objectFit: 'cover'}}
-                    />
-                ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-500">
-                    Obrázok nie je k dispozícii
-                    </div>
-                )}
-            </>
-        )}
-      </div>
-      <div className="p-4">
-        {product.slug ? (
-          <Link href={`/vino/${product.slug}`}>
-            <h3 className="text-lg font-semibold truncate hover:underline">{product.name}</h3>
-          </Link>
-        ) : (
-          <h3 className="text-lg font-semibold truncate">{product.name}</h3>
-        )}
-        <p className="text-sm text-muted-foreground mt-1">{product.year} | {product.wine_region}</p>
-        <div className="flex items-center justify-between mt-4">
-          <p className="text-xl font-bold">{product.price.toFixed(2)} €</p>
+          </h3>
+        </div>
+        <div className="flex items-center justify-between mt-auto">
+          <p className="text-2xl font-bold">{product.price.toFixed(2)} €</p>
           {cartItem ? (
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => decreaseQuantity(product.id)}>
+              <Button variant="outline" size="icon" className="h-9 w-9 rounded-full" onClick={() => decreaseQuantity(product.id)}>
                 <Minus className="h-4 w-4" />
               </Button>
-              <span className="font-bold text-lg w-5 text-center">{cartItem.quantity}</span>
-              <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => addItem(product)}>
+              <span className="font-bold text-lg w-6 text-center">{cartItem.quantity}</span>
+              <Button variant="outline" size="icon" className="h-9 w-9 rounded-full" onClick={() => addItem(product)}>
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
           ) : (
-            <Button onClick={handleAddToCart}>Do košíka</Button>
+            <Button onClick={handleAddToCart} className="rounded-full">
+              <Plus className="h-4 w-4 mr-2" />
+              Do košíka
+            </Button>
           )}
         </div>
       </div>

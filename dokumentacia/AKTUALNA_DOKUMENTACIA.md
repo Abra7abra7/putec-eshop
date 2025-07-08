@@ -118,3 +118,79 @@ Počas vývoja sa vyskytla neštandardná typová chyba v `app/admin/products/ed
 - **Vytvorenie produkčného buildu:** `npm run build`
 
 Projekt je pripravený na nasadenie na platformách ako Vercel alebo Netlify.
+
+---
+
+# Dokumentácia projektu E-shop
+
+**Dátum generovania:** 2025-07-08
+
+---
+
+### 1. Celkový prehľad a použité technológie
+
+Projekt je moderná webová aplikácia typu e-shop postavená na nasledujúcich technológiách:
+
+*   **Framework:** [Next.js](https://nextjs.org/) (React framework s App Routerom)
+*   **Jazyk:** [TypeScript](https://www.typescriptlang.org/)
+*   **Backend a databáza:** [Supabase](https://supabase.io/) (poskytuje databázu, autentifikáciu, a úložisko)
+*   **Spracovanie platieb:** [Stripe](https://stripe.com/)
+*   **Štýlovanie:** [Tailwind CSS](https://tailwindcss.com/)
+*   **UI Komponenty:** Pravdepodobne [shadcn/ui](https://ui.shadcn.com/) (súdiac podľa `components.json` a štruktúry `components/ui`)
+*   **State Management:** [Zustand](https://github.com/pmndrs/zustand) (súdiac podľa `use-cart-store.ts`)
+*   **E-mailové šablóny:** [React Email](https://react.email/) (súdiac podľa adresára `emails`)
+
+Aplikácia poskytuje funkcionalitu pre zákazníkov (prezeranie produktov, nákupný košík, platba) a administrátorov (správa produktov).
+
+---
+
+### 2. Štruktúra projektu
+
+#### `app/`
+Hlavný adresár aplikácie, ktorý využíva Next.js App Router.
+
+*   **`app/(main)/`**: Obsahuje hlavné, verejne prístupné stránky aplikácie (napr. domovská stránka, zoznam produktov).
+*   **`app/admin/`**: Sekcia pre administrátorov. Obsahuje stránky na správu produktov (vytváranie, úprava, mazanie). Prístup je pravdepodobne chránený.
+*   **`app/api/`**: Definuje API endpointy. Využíva sa na komunikáciu s backend službami ako Stripe (napr. cez webhooks).
+*   **`app/auth/`**: Stránky súvisiace s autentifikáciou používateľov – prihlásenie, registrácia, zabudnuté heslo.
+*   **`app/protected/`**: Stránky, ktoré sú prístupné len pre prihlásených používateľov (napr. profil, história objednávok).
+*   **`layout.tsx`**: Hlavný layout aplikácie, ktorý obaľuje všetky stránky. Definuje základnú HTML štruktúru, načítava globálne štýly a fonty.
+*   **`globals.css`**: Globálne CSS štýly pre celú aplikáciu.
+
+#### `components/`
+Adresár s React komponentmi, ktoré sú znovupoužiteľné naprieč aplikáciou.
+
+*   **`auth-button.tsx`**: Komponent, ktorý zobrazuje buď "Prihlásiť sa" alebo meno používateľa s možnosťou odhlásenia.
+*   **`login-form.tsx`, `sign-up-form.tsx`, `forgot-password-form.tsx`**: Formuláre pre autentifikáciu.
+*   **`products/`**: Komponenty špecifické pre zobrazovanie produktov (napr. karta produktu, zoznam produktov).
+*   **`checkout/`**: Komponenty pre proces nákupného košíka a platby.
+*   **`ui/`**: Základné, generické UI komponenty ako `Button`, `Input`, `Card`, atď. (pravdepodobne zo `shadcn/ui`).
+*   **`theme-switcher.tsx`**: Komponent na prepínanie medzi svetlou a tmavou témou.
+
+#### `hooks/`
+Obsahuje vlastné (custom) React hooks.
+
+*   **`use-cart-store.ts`**: Kľúčový hook pre správu stavu nákupného košíka. Umožňuje pridávať, odoberať a upravovať položky v košíku a zdieľať tento stav medzi komponentmi.
+
+#### `lib/`
+Pomocné funkcie a knižnice.
+
+*   **`stripe.ts`**: Inicializácia a konfigurácia Stripe klienta pre komunikáciu so Stripe API.
+*   **`supabase/`**: Obsahuje konfiguráciu Supabase klienta (`client.ts`), server-side klienta (`server.ts`) a prípadné pomocné funkcie pre prácu s databázou (`utils.ts`).
+*   **`types.ts`**: Definuje globálne TypeScript typy používané v projekte (napr. `Product`, `CartItem`).
+*   **`utils.ts`**: Všeobecné pomocné funkcie (napr. formátovanie ceny, dátumu).
+
+#### `emails/`
+Obsahuje šablóny pre e-maily (napr. potvrdenie objednávky, reset hesla) vytvorené pomocou React Email.
+
+#### `middleware.ts`
+Next.js middleware, ktorý sa spúšťa pred spracovaním požiadavky. Pravdepodobne sa používa na ochranu chránených stránok (`/admin`, `/protected`) a presmerovanie neprihlásených používateľov na prihlasovaciu stránku.
+
+#### Koreňový adresár
+*   **`.env`, `.env.local`**: Súbory s premennými prostredia (API kľúče, prihlasovacie údaje k databáze). **Tieto súbory by nikdy nemali byť súčasťou Git repozitára.**
+*   **`next.config.js`, `next.config.ts`**: Konfiguračné súbory pre Next.js.
+*   **`tailwind.config.ts`**: Konfigurácia pre Tailwind CSS (definícia farieb, fontov, rozšírení).
+*   **`tsconfig.json`**: Konfigurácia TypeScript kompilátora.
+*   **`package.json`**: Definuje závislosti projektu a skripty (napr. `dev`, `build`, `start`).
+
+---
