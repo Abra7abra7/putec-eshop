@@ -1,13 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import { useActionState, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { addProduct, updateProduct, State } from '../_actions/productActions';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { useFormStatus } from 'react-dom';
+import { useFormState, useFormStatus } from 'react-dom';
 import slugify from 'slugify';
 
 import { type Product } from '@/lib/types';
@@ -28,7 +28,7 @@ export default function ProductForm({ product }: { product?: Product }) {
 
   // Dynamicky vyberieme akciu podľa toho, či upravujeme alebo pridávame
   const actionToCall = isEditing ? updateProduct.bind(null, product.id, product) : addProduct;
-  const [state, formAction] = useActionState(actionToCall, initialState);
+  const [state, formAction] = useFormState(actionToCall, initialState);
 
   // Stav pre plne kontrolované inputy
   const [name, setName] = useState(product?.name || '');

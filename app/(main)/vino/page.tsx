@@ -6,7 +6,7 @@ export default async function VinoPage() {
   const supabase = await createClient();
   const { data: products, error } = await supabase
     .from('products')
-    .select('id, name, description, price, stock, sku, image_url, gallery_urls, is_active, category_id, year, wine_region, alcohol_percentage, attributes, slug')
+    .select('*')
     .eq('is_active', true)
     .order('name', { ascending: true });
 
