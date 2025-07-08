@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { type Product } from '@/lib/types';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 // Typ pre stavový objekt, ktorý vraciame z akcií
 export type State = {
@@ -74,7 +75,7 @@ function emptyStringToNull(obj: Record<string, FormDataEntryValue>): Record<stri
   return newObj;
 }
 
-async function uploadImage(supabase: any, image: File, id?: string): Promise<string> {
+async function uploadImage(supabase: SupabaseClient, image: File, id?: string): Promise<string> {
   const fileExt = image.name.split('.').pop();
   const fileName = `${id || Math.random()}-${Date.now()}.${fileExt}`;
 
@@ -117,9 +118,12 @@ export async function addProduct(prevState: State, formData: FormData): Promise<
     const { error } = await supabase.from('products').insert(dataToInsert);
 
     if (error) throw error;
-  } catch (error: any) {
-    console.error('Database Error:', error);
-    return { message: error.message || 'Chyba pri ukladaní produktu.' };
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error('Database Error:', error.message);
+      return { message: error.message };
+    }
+    return { message: 'Chyba pri ukladaní produktu.' };
   }
 
   revalidatePath('/admin/products');
@@ -164,9 +168,12 @@ export async function updateProduct(
     const { error } = await supabase.from('products').update(dataToUpdate).eq('id', id);
 
     if (error) throw error;
-  } catch (error: any) {
-    console.error('Database Error:', error);
-    return { message: error.message || 'Chyba pri aktualizácii produktu.' };
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error('Database Error:', error.message);
+      return { message: error.message };
+    }
+    return { message: 'Chyba pri aktualizácii produktu.' };
   }
 
   revalidatePath('/admin/products');
