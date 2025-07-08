@@ -44,13 +44,13 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         <div className="flex-grow mb-4">
           <p className="text-sm text-muted-foreground">{product.year} | {product.wine_region}</p>
           <h3 className="text-lg font-semibold truncate mt-1">
-            <Link href={product.slug ? `/vino/${product.slug}` : '#'} className="hover:underline">
+            <Link href={product.slug ? `/vino/${product.slug}` : '#'} className="transition-colors hover:text-primary">
               {product.name}
             </Link>
           </h3>
         </div>
         <div className="flex items-center justify-between mt-auto">
-          <p className="text-2xl font-bold">{product.price.toFixed(2)} €</p>
+          <p className="text-2xl font-bold text-primary">{product.price.toFixed(2)} €</p>
           {cartItem ? (
             <div className="flex items-center gap-2">
               <Button variant="outline" size="icon" className="h-9 w-9 rounded-full" onClick={() => decreaseQuantity(product.id)}>
