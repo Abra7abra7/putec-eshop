@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Product } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { useCartStore, CartState, CartItem } from '@/hooks/use-cart-store';
+import { useCartStore, CartItem } from '@/hooks/use-cart-store';
 import { Plus, Minus } from 'lucide-react';
 
 interface ProductCardProps {

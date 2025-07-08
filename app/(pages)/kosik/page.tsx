@@ -3,7 +3,6 @@
 import { useCartStore, CartItem } from '@/hooks/use-cart-store';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Minus } from 'lucide-react';
 

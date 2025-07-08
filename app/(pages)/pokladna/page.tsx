@@ -1,13 +1,13 @@
 'use client';
 
-import { useCartStore, CartItem } from '@/hooks/use-cart-store';
+import { useCartStore } from '@/hooks/use-cart-store';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -48,7 +48,7 @@ const checkoutFormSchema = z.object({
 type CheckoutFormValues = z.infer<typeof checkoutFormSchema>;
 
 export default function PokladnaPage() {
-  const { items, clearCart } = useCartStore();
+  const { items } = useCartStore();
   const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -125,7 +125,7 @@ export default function PokladnaPage() {
                   <FormField
                     control={form.control}
                     name="customerType"
-                    render={({ field }: { field: any }) => (
+                    render={({ field }) => (
                       <FormItem className="space-y-3">
                         <FormLabel>Nakupujem na:</FormLabel>
                         <FormControl>
@@ -150,18 +150,18 @@ export default function PokladnaPage() {
                   />
                   {customerType === 'company' && (
                     <div className="space-y-2 p-4 border rounded-md">
-                      <FormField control={form.control} name="companyName" render={({ field }: { field: any }) => (<FormItem><FormLabel>Názov firmy</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
-                      <FormField control={form.control} name="ico" render={({ field }: { field: any }) => (<FormItem><FormLabel>IČO</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
-                      <FormField control={form.control} name="dic" render={({ field }: { field: any }) => (<FormItem><FormLabel>DIČ</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
-                      <FormField control={form.control} name="icDph" render={({ field }: { field: any }) => (<FormItem><FormLabel>IČ DPH (ak ste platcom)</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
+                      <FormField control={form.control} name="companyName" render={({ field }) => (<FormItem><FormLabel>Názov firmy</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
+                      <FormField control={form.control} name="ico" render={({ field }) => (<FormItem><FormLabel>IČO</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
+                      <FormField control={form.control} name="dic" render={({ field }) => (<FormItem><FormLabel>DIČ</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
+                      <FormField control={form.control} name="icDph" render={({ field }) => (<FormItem><FormLabel>IČ DPH (ak ste platcom)</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
                     </div>
                   )}
                    <div className="grid grid-cols-2 gap-4">
-                    <FormField control={form.control} name="firstName" render={({ field }: { field: any }) => (<FormItem><FormLabel>Meno</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
-                    <FormField control={form.control} name="lastName" render={({ field }: { field: any }) => (<FormItem><FormLabel>Priezvisko</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
+                    <FormField control={form.control} name="firstName" render={({ field }) => (<FormItem><FormLabel>Meno</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
+                    <FormField control={form.control} name="lastName" render={({ field }) => (<FormItem><FormLabel>Priezvisko</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
                   </div>
-                  <FormField control={form.control} name="email" render={({ field }: { field: any }) => (<FormItem><FormLabel>E-mail</FormLabel><FormControl><Input {...field} type="email" /></FormControl><FormMessage /></FormItem>)} />
-                  <FormField control={form.control} name="phone" render={({ field }: { field: any }) => (<FormItem><FormLabel>Telefón</FormLabel><FormControl><Input {...field} type="tel" /></FormControl><FormMessage /></FormItem>)} />
+                  <FormField control={form.control} name="email" render={({ field }) => (<FormItem><FormLabel>E-mail</FormLabel><FormControl><Input {...field} type="email" /></FormControl><FormMessage /></FormItem>)} />
+                  <FormField control={form.control} name="phone" render={({ field }) => (<FormItem><FormLabel>Telefón</FormLabel><FormControl><Input {...field} type="tel" /></FormControl><FormMessage /></FormItem>)} />
                 </CardContent>
               </Card>
 
@@ -173,7 +173,7 @@ export default function PokladnaPage() {
                   <FormField
                     control={form.control}
                     name="deliveryMethod"
-                    render={({ field }: { field: any }) => (
+                    render={({ field }) => (
                       <FormItem className="space-y-3">
                         <FormControl>
                           <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="space-y-2">
@@ -194,10 +194,10 @@ export default function PokladnaPage() {
                   {deliveryMethod === 'delivery' && (
                     <div className="space-y-2 mt-4 p-4 border rounded-md">
                        <h3 className="text-lg font-semibold mb-2">Doručovacia adresa</h3>
-                       <FormField control={form.control} name="shippingStreet" render={({ field }: { field: any }) => (<FormItem><FormLabel>Ulica a číslo</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
+                       <FormField control={form.control} name="shippingStreet" render={({ field }) => (<FormItem><FormLabel>Ulica a číslo</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
                        <div className="grid grid-cols-2 gap-4">
-                         <FormField control={form.control} name="shippingCity" render={({ field }: { field: any }) => (<FormItem><FormLabel>Mesto</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
-                         <FormField control={form.control} name="shippingZip" render={({ field }: { field: any }) => (<FormItem><FormLabel>PSČ</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
+                         <FormField control={form.control} name="shippingCity" render={({ field }) => (<FormItem><FormLabel>Mesto</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
+                         <FormField control={form.control} name="shippingZip" render={({ field }) => (<FormItem><FormLabel>PSČ</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
                        </div>
                     </div>
                   )}
@@ -212,7 +212,7 @@ export default function PokladnaPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {items.map((item: CartItem) => (
+                                        {items.map((item) => (
                       <div key={item.product.id} className="flex justify-between items-center">
                         <div className="flex items-center gap-4">
                           <div className="relative w-16 h-16 bg-gray-100 rounded-md overflow-hidden">

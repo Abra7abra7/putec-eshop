@@ -22,8 +22,10 @@ async function getProductBySlug(slug: string) {
 }
 
 // Komponent stránky
-export default async function ProductDetailPage({ params }: { params: { slug: string } }) {
-  const product = await getProductBySlug(params.slug);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default async function ProductDetailPage({ params }: { params: any }) {
+  const slug = params.slug as string;
+  const product = await getProductBySlug(slug);
 
   if (!product) {
     notFound();
@@ -46,6 +48,39 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
 
           <p className="text-2xl font-semibold text-red-600 mb-4">{product.price.toFixed(2)} €</p>
           <p className="text-gray-700 mb-6">{product.description}</p>
+
+          <div className="border-t pt-4 mt-4 mb-6 space-y-2">
+            {product.year && (
+              <p className="text-sm text-gray-800">
+                <strong>Ročník:</strong> {product.year}
+              </p>
+            )}
+            {product.wine_region && (
+              <p className="text-sm text-gray-800">
+                <strong>Vinohradnícka oblasť:</strong> {product.wine_region}
+              </p>
+            )}
+            {product.alcohol_percentage && (
+              <p className="text-sm text-gray-800">
+                <strong>Alkohol:</strong> {product.alcohol_percentage}%
+              </p>
+            )}
+            {product.attributes && (
+              <div className="text-sm text-gray-800">
+                <strong>Zatriedenie:</strong>
+                <div className="flex flex-wrap gap-2 mt-1">
+                  {Object.entries(product.attributes).map(([key, value]) => (
+                    <span
+                      key={key}
+                      className="bg-gray-200 text-gray-700 px-2.5 py-1 rounded-full text-xs font-medium"
+                    >
+                      {value as string}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
           
           <AddToCartButton product={product} />
 
