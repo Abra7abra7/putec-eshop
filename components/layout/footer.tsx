@@ -12,8 +12,9 @@ export const Footer = () => {
           <h4 className="font-semibold">Rýchle odkazy</h4>
           <ul className="mt-2 space-y-1">
             <li><Link href="/vino" className="text-muted-foreground hover:text-foreground">Všetky vína</Link></li>
-            <li><Link href="/zazitky" className="text-muted-foreground hover:text-foreground">Degustácie</Link></li>
+                        <li><Link href="/degustacie" className="text-muted-foreground hover:text-foreground">Degustácie</Link></li>
             <li><Link href="/ubytovanie" className="text-muted-foreground hover:text-foreground">Ubytovanie</Link></li>
+            <li><Link href="/o-nas" className="text-muted-foreground hover:text-foreground">O nás</Link></li>
           </ul>
         </div>
         <div>

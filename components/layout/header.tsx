@@ -11,7 +11,7 @@ export const Header = () => {
         </Link>
         <nav className="hidden items-center space-x-6 text-sm font-medium md:flex">
           <Link href="/vino" className="transition-colors hover:text-foreground/80">E-shop</Link>
-          <Link href="/zazitky" className="transition-colors hover:text-foreground/80">Degustácie</Link>
+          <Link href="/degustacie" className="transition-colors hover:text-foreground/80">Degustácie</Link>
           <Link href="/ubytovanie" className="transition-colors hover:text-foreground/80">Ubytovanie</Link>
         </nav>
         <div className="flex items-center gap-2">
