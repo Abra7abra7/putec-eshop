@@ -17,8 +17,7 @@ async function getProduct(id: string) {
   return product;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default async function EditProductPage({ params }: any) {
+export default async function EditProductPage({ params }: { params: { id: string } }) {
   const product = await getProduct(params.id);
 
   return (

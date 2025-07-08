@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useActionState, useEffect, useState } from 'react';
 import { addProduct, updateProduct, State } from '../_actions/productActions';
 import { Input } from '@/components/ui/input';
@@ -9,22 +10,8 @@ import { Button } from '@/components/ui/button';
 import { useFormStatus } from 'react-dom';
 import slugify from 'slugify';
 
-// Definujeme typ pre produkt, aby sme mali istotu v dátach
-// Rozšírený typ pre produkt, aby zodpovedal databáze
-interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  slug: string;
-  rocnik?: number | null;
-  farba_vina?: string | null;
-  zvyskovy_cukor?: string | null;
-  vona?: string | null;
-  chut?: string | null;
-  farba_popis?: string | null;
-  ean?: string | null;
-}
+import { type Product } from '@/lib/types';
+
 
 function SubmitButton({ isEditing }: { isEditing: boolean }) {
   const { pending } = useFormStatus();
@@ -40,7 +27,7 @@ export default function ProductForm({ product }: { product?: Product }) {
   const initialState: State = { message: null, errors: {} };
 
   // Dynamicky vyberieme akciu podľa toho, či upravujeme alebo pridávame
-  const actionToCall = isEditing ? updateProduct.bind(null, product.id) : addProduct;
+  const actionToCall = isEditing ? updateProduct.bind(null, product.id, product) : addProduct;
   const [state, formAction] = useActionState(actionToCall, initialState);
 
   // Stav pre plne kontrolované inputy
@@ -58,6 +45,7 @@ export default function ProductForm({ product }: { product?: Product }) {
   const [chut, setChut] = useState(product?.chut || '');
   const [farbaPopis, setFarbaPopis] = useState(product?.farba_popis || '');
   const [ean, setEan] = useState(product?.ean || '');
+  const [imagePreview, setImagePreview] = useState<string | null>(product?.image_url || null);
 
   useEffect(() => {
     if (!manualSlug) {
@@ -72,6 +60,20 @@ export default function ProductForm({ product }: { product?: Product }) {
   const handleSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setManualSlug(true);
     setSlug(e.target.value);
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      // Ak používateľ zruší výber, vrátime pôvodný obrázok produktu (ak existuje)
+      setImagePreview(product?.image_url || null);
+    }
   };
 
   return (
@@ -100,6 +102,24 @@ export default function ProductForm({ product }: { product?: Product }) {
           onChange={handleSlugChange}
         />
         {state.errors?.slug && <p className="text-red-500 text-xs">{state.errors.slug}</p>}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="image">Obrázok produktu</Label>
+        <Input type="file" id="image" name="image" accept="image/*" onChange={handleImageChange} />
+        {imagePreview && (
+          <div className="mt-4">
+            <p className="text-sm font-medium mb-2">Náhľad:</p>
+            <Image
+              src={imagePreview}
+              alt="Náhľad obrázka"
+              width={200}
+              height={200}
+              className="rounded-md object-cover"
+            />
+          </div>
+        )}
+        {state.errors?.image && <p className="text-red-500 text-xs">{state.errors.image}</p>}
       </div>
 
       <div className="space-y-2">
