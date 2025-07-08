@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from 'next/image';
 import { Facebook, Instagram, Mail, MapPin, Phone } from 'lucide-react';
 
 export const Footer = () => {
@@ -8,7 +9,9 @@ export const Footer = () => {
         
         {/* Column 1: Brand & Contact */}
         <div className="md:col-span-2">
-          <h3 className="text-lg font-bold text-primary">Pútec</h3>
+          <Link href="/">
+            <Image src="/images/logoputec.svg" alt="Vinárstvo Pútec Logo" width={160} height={40} className="h-10 w-auto" />
+          </Link>
           <p className="text-muted-foreground mt-2 mb-4">Vinárstvo s tradíciou, chuťou a srdcom.</p>
           <div className="space-y-2 text-muted-foreground">
             <p className="flex items-center"><MapPin className="h-4 w-4 mr-2 shrink-0"/> Vinohradnícka 123, 902 01 Pezinok</p>

@@ -34,9 +34,12 @@ export const ProductCard = ({ product }: ProductCardProps) => {
               className="object-cover transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-              Obrázok chýba
-            </div>
+            <Image
+              src="/images/degustacie/degustačná-x.webp"
+              alt="Záložný obrázok produktu"
+              fill
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+            />
           )}
         </div>
       </Link>

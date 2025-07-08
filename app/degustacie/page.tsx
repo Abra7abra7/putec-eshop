@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Mail } from 'lucide-react';
+import { Mail, Clock, Wine } from 'lucide-react';
 import Image from 'next/image';
 import { FaqSection } from '@/components/faq-section';
 
@@ -10,31 +10,33 @@ export default function DegustaciePage() {
       popis: 'Prehliadka pivnice s odborným výkladom a ochutnávka 5 starostlivo vybraných vzoriek našich najobľúbenejších vín. Ideálne pre tých, ktorí sa chcú zoznámiť s našou produkciou.',
       cena: '15 € / osoba',
       trvanie: 'cca 60 minút',
+      pocetVzoriek: '5 vzoriek',
     },
     {
       nazov: 'Rozšírená degustácia',
       popis: 'Ochutnávka 8 vzoriek vín vrátane archívnych kúskov, doplnená o tanier lokálnych syrov a domácich mäsových výrobkov. Hlbší ponor do sveta našich chutí.',
       cena: '25 € / osoba',
       trvanie: 'cca 90 minút',
+      pocetVzoriek: '8 vzoriek',
     },
     {
       nazov: 'Prémiová degustácia',
       popis: 'Exkluzívna degustácia 10 vzoriek prémiových a limitovaných edícií vín. Súčasťou je bohaté občerstvenie a osobná konzultácia priamo s naším vinárom.',
       cena: '40 € / osoba',
       trvanie: 'cca 120 minút',
+      pocetVzoriek: '10 vzoriek',
     },
   ];
 
   const galleryImages = [
+    { src: '/images/degustacie/degustácia-x.webp', alt: 'Detail na nalievanie vína' },
+    { src: '/images/degustacie/sudy-x.webp', alt: 'Drevené sudy v pivnici' },
+    { src: '/images/degustacie/misa-x.webp', alt: 'Občerstvenie k degustácii' },
     { src: '/images/degustacie/Brano-degustácia-x.webp', alt: 'Degustácia s vinárom' },
     { src: '/images/degustacie/IMG_5508-6-x.webp', alt: 'Poháre s vínom pripravené na degustáciu' },
+    { src: '/images/degustacie/jama-x.webp', alt: 'Vstup do vínnej pivnice' },
     { src: '/images/degustacie/degustačná-x.webp', alt: 'Priestory degustačnej miestnosti' },
     { src: '/images/degustacie/degustácia-brano-x.webp', alt: 'Vinár Braňo pri výklade' },
-    { src: '/images/degustacie/degustácia-x.webp', alt: 'Detail na nalievanie vína' },
-    { src: '/images/degustacie/jama-x.webp', alt: 'Vstup do vínnej pivnice' },
-    { src: '/images/degustacie/misa-x.webp', alt: 'Občerstvenie k degustácii' },
-    { src: '/images/degustacie/ruky-x.webp', alt: 'Detail na ruky s pohárom vína' },
-    { src: '/images/degustacie/sudy-x.webp', alt: 'Drevené sudy v pivnici' },
   ];
 
   const faqData = [
@@ -47,67 +49,82 @@ export default function DegustaciePage() {
 
   return (
     <>
-      <div className="container mx-auto px-4 py-12 md:py-20">
-        <div className="text-center max-w-3xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tighter mb-4 text-primary">
-            Degustácie v našom vinárstve
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground">
-            Objavte chute našich vín priamo v srdci našej pivnice. Pripravujeme pre vás nezabudnuteľné degustácie s odborným výkladom, kde každá fľaša rozpráva svoj vlastný príbeh.
+      {/* Hero Section */}
+      <section className="relative h-[50vh] flex items-center justify-center text-center text-white">
+        <Image
+          src="/images/degustacie/sudy-x.webp"
+          alt="Sudy v pivnici vinárstva Pútec"
+          fill
+          style={{ objectFit: 'cover' }}
+          className="z-0 brightness-50"
+          priority
+        />
+        <div className="relative z-10 p-4">
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tighter">Zážitok v každom pohári</h1>
+          <p className="mt-4 text-lg md:text-xl max-w-3xl mx-auto">
+            Objavte chute našich vín priamo v srdci našej pivnice. Prevedieme vás príbehom každej fľaše.
           </p>
-        </div>
-
-        <div className="mt-12 md:mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {degustacie.map((degustacia) => (
-            <div key={degustacia.nazov} className="border rounded-xl p-6 flex flex-col transition-all duration-300 hover:shadow-lg hover:border-primary/50 bg-card">
-              <h3 className="text-2xl font-semibold mb-2 text-primary/90">{degustacia.nazov}</h3>
-              <p className="text-muted-foreground flex-grow mb-4">{degustacia.popis}</p>
-              <div className="mt-auto pt-4 border-t">
-                <p className="font-bold text-lg">{degustacia.cena}</p>
-                <p className="text-sm text-muted-foreground">{degustacia.trvanie}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-12 md:mt-20 text-center border-t pt-12 max-w-2xl mx-auto">
-          <h2 className="text-3xl font-bold mb-4">Máte záujem o rezerváciu?</h2>
-          <p className="text-muted-foreground mb-6">
-            Pre rezerváciu termínu alebo individuálnu ponuku nás neváhajte kontaktovať. Tešíme sa na vašu návštevu!
-          </p>
-          <Button asChild size="lg">
-            <a href="mailto:rezervacie@putec.sk">
-              <Mail className="mr-2 h-5 w-5" />
-              Kontaktujte nás e-mailom
-            </a>
-          </Button>
-        </div>
-      </div>
-
-      {/* Galéria */}
-      <section className="w-full py-12 md:py-20">
-        <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
-                <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-primary">
-                    Atmosféra, ktorú si zamilujete
-                </h2>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {galleryImages.map((image, index) => (
-                    <div key={index} className="relative h-64 w-full rounded-lg overflow-hidden shadow-lg group">
-                        <Image 
-                            src={image.src} 
-                            alt={image.alt} 
-                            fill
-                            style={{ objectFit: "cover" }} 
-                            className="transition-transform duration-300 group-hover:scale-110"
-                        />
-                    </div>
-                ))}
-            </div>
         </div>
       </section>
 
+      {/* Intro Section */}
+      <section className="py-16 md:py-24 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-primary">Ochutnajte to najlepšie z našej pivnice</h2>
+            <p className="mt-4 text-lg text-muted-foreground">
+              Pripravili sme pre vás niekoľko degustačných balíkov, ktoré vás prevedú našou produkciou. Či ste zvedavý začiatočník alebo skúsený znalec, u nás si prídete na svoje. Každá degustácia prebieha v autentických priestoroch našej pivnice a je vedená priamo naším vinárom.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Degustacie Section */}
+      <section className="py-16 md:py-24 bg-card/50">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {degustacie.map((degustacia) => (
+              <div key={degustacia.nazov} className="border rounded-xl p-8 flex flex-col transition-all duration-300 hover:shadow-xl hover:border-primary/50 bg-background/80">
+                <h3 className="text-2xl font-bold mb-4 text-primary">{degustacia.nazov}</h3>
+                <p className="text-muted-foreground flex-grow mb-6">{degustacia.popis}</p>
+                <div className="mt-auto space-y-4 pt-6 border-t">
+                  <div className="flex items-center"><Wine className="mr-3 h-5 w-5 text-primary/80" /><span>{degustacia.pocetVzoriek}</span></div>
+                  <div className="flex items-center"><Clock className="mr-3 h-5 w-5 text-primary/80" /><span>{degustacia.trvanie}</span></div>
+                  <p className="font-bold text-2xl pt-2">{degustacia.cena}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-16 text-center border-t pt-12 max-w-3xl mx-auto">
+            <h2 className="text-3xl font-bold mb-4">Rezervujte si svoj termín</h2>
+            <p className="text-muted-foreground mb-6">
+              Pre rezerváciu termínu alebo individuálnu ponuku pre väčšie skupiny nás neváhajte kontaktovať. Tešíme sa na vašu návštevu!
+            </p>
+            <Button asChild size="lg">
+              <a href="mailto:rezervacie@putec.sk">
+                <Mail className="mr-2 h-5 w-5" />
+                Napíšte nám
+              </a>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Gallery Section */}
+      <section className="py-16 md:py-24">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-center text-primary mb-12">Atmosféra, ktorú si zamilujete</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {galleryImages.map((img, index) => (
+              <div key={index} className="relative aspect-square rounded-lg overflow-hidden group shadow-md">
+                <Image src={img.src} alt={img.alt} fill style={{ objectFit: 'cover' }} className="transition-transform duration-300 group-hover:scale-110" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
       <FaqSection title="Často kladené otázky" faqData={faqData} />
     </>
   );

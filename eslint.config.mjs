@@ -1,4 +1,8 @@
+import globals from "globals";
+import tseslint from "typescript-eslint";
+import pluginReactConfig from "eslint-plugin-react/configs/recommended.js";
 import nextPlugin from "@next/eslint-plugin-next";
+
 import tsPlugin from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
 import prettierConfig from "eslint-config-prettier";
@@ -8,7 +12,15 @@ import hooksPlugin from "eslint-plugin-react-hooks";
 /** @type {import('eslint').Linter.FlatConfig[]} */
 export default [
   {
-    ignores: [".next/**", "node_modules/**", "emails/**", "dokumentacia/**"],
+    ignores: [
+      ".next/**",
+      "node_modules/**",
+      "emails/**",
+      "dokumentacia/**",
+      "eslint.config.mjs",
+      "next.config.mjs",
+      "postcss.config.mjs",
+    ],
   },
   {
     files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
@@ -32,6 +44,8 @@ export default [
       ...nextPlugin.configs["core-web-vitals"].rules,
       "@typescript-eslint/no-unused-vars": "warn",
       "@typescript-eslint/no-explicit-any": "off",
+      "react/react-in-jsx-scope": "off",
+      "react/prop-types": "off",
     },
   },
   prettierConfig,
