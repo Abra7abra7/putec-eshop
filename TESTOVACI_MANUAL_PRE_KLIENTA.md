@@ -56,12 +56,40 @@ Tento krok simuluje reálnu objednávku pomocou **testovacích platobných karie
 
 ---
 
-## 3. Používateľský účet
+## 3. Správa používateľov a rolí
 
-- [ ] **Registrácia:** Vytvorte si nový používateľský účet.
+Váš web rozlišuje medzi bežným zákazníkom a administrátorom, ktorý má prístup k správe obsahu.
+
+### A. Bežný používateľ (rola: `user`)
+
+Každý novo zaregistrovaný používateľ má automaticky rolu `user`.
+
+- [ ] **Registrácia:** Vytvorte si nový testovací účet cez registračný formulár.
 - [ ] **Prihlásenie / Odhlásenie:** Po registrácii sa skúste odhlásiť a znova prihlásiť.
-- [ ] **Zákaznícka zóna:** Po prihlásení skontrolujte, či vidíte sekciu "Môj účet" alebo podobnú.
-- [ ] **História objednávok:** V zákazníckej zóne overte, či vidíte svoju testovaciu objednávku, ktorú ste práve vykonali.
+- [ ] **Zobrazenie profilu:** Po prihlásení kliknite na ikonu profilu vpravo hore. Overte, že sa zobrazí menu s vaším e-mailom a odkazom na "Profil".
+- [ ] **Stránka profilu:** Prejdite na stránku "Profil". Skontrolujte, či vidíte svoje údaje (e-mail, rola: `user`).
+- [ ] **Obmedzený prístup:** Skúste manuálne v prehliadači zadať adresu `vasa-domena.sk/admin`. Mali by ste byť presmerovaný na hlavnú stránku, prístup by mal byť zamietnutý.
+
+### B. Administrátor (rola: `admin`)
+
+Rola administrátora sa prideľuje ručne v databáze. Pre testovacie účely vám bola táto rola nastavená na vašom hlavnom účte.
+
+- [ ] **Prihlásenie ako admin:** Prihláste sa s vašimi administrátorskymi údajmi.
+- [ ] **Prístup do administrácie:** Po prihlásení skúste prejsť na stránku `vasa-domena.sk/admin`. Mali by ste vidieť administrátorský panel pre správu produktov.
+- [ ] **Pridanie nového produktu:**
+    - V administrácii kliknite na "Pridať produkt".
+    - Vyplňte všetky polia (názov, cena, popis, obrázok atď.).
+    - Uložte produkt.
+    - Overte, či sa nový produkt zobrazil v zozname produktov v administrácii aj na verejnej časti e-shopu.
+- [ ] **Úprava existujúceho produktu:**
+    - V zozname produktov kliknite na "Upraviť" pri jednom z produktov.
+    - Zmeňte niektoré údaje (napr. cenu alebo názov).
+    - Uložte zmeny.
+    - Overte, či sa zmeny prejavili v detaile produktu na e-shope.
+- [ ] **Odstránenie produktu:**
+    - V zozname produktov kliknite na "Odstrániť" pri jednom z testovacích produktov.
+    - Potvrďte odstránenie.
+    - Overte, či produkt zmizol zo zoznamu v administrácii aj z e-shopu.
 
 ---
 
