@@ -98,3 +98,7 @@ Pre spustenie projektu na lokálnom počítači postupujte podľa nasledujúcich
     ```
 
 Aplikácia by mala byť dostupná na adrese [http://localhost:3000](http://localhost:3000).
+
+Code Rabbit
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/Abra7abra7/putec-eshop?utm_source=oss&utm_medium=github&utm_campaign=Abra7abra7%2Fputec-eshop&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
+
