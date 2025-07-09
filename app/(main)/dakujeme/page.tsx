@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { CircleCheckBig } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 // Definovanie typov pre lepšiu prácu s dátami
 type OrderItem = {
@@ -28,14 +30,13 @@ async function OrderDetails({ sessionId }: { sessionId: string }) {
     return notFound();
   }
 
-  // Vynútenie typu, keďže Supabase nevie presný typ vnorených relácií
   const typedOrder = order as unknown as Order;
 
   return (
-    <div className="text-left border-t border-b py-6 my-6">
-      <h2 className="text-2xl font-semibold mb-4">Súhrn objednávky</h2>
-      <p className="mb-2"><span className="font-semibold">Číslo objednávky:</span> {typedOrder.id}</p>
-      <ul className="list-disc list-inside mb-4">
+    <div className="w-full text-left border-t py-6 my-6">
+      <h2 className="text-xl font-semibold mb-4">Súhrn objednávky</h2>
+      <p className="mb-2 text-gray-600"><span className="font-semibold text-gray-800">Číslo objednávky:</span> {typedOrder.id}</p>
+      <ul className="list-disc list-inside mb-4 text-gray-600">
         {typedOrder.order_items.map((item, index) => (
           <li key={index} className="mb-1">
             {item.products?.name || 'Neznámy produkt'} - {item.quantity} ks
@@ -57,19 +58,20 @@ export default function DakujemePage({ searchParams }: { searchParams: any }) {
   }
 
   return (
-    <div className="container mx-auto my-12 p-8 bg-white rounded-lg shadow-lg max-w-2xl text-center">
-      <h1 className="text-4xl font-bold text-green-600 mb-4">Ďakujeme za vašu objednávku!</h1>
-      <p className="text-lg text-gray-700 mb-6">Vaša objednávka bola úspešne prijatá a spracováva sa.</p>
-      
-      <OrderDetails sessionId={sessionId} />
+    <div className="container mx-auto my-24">
+      <div className="max-w-2xl mx-auto border rounded-lg p-12 flex flex-col items-center text-center shadow-sm">
+        <CircleCheckBig className="h-20 w-20 text-green-600 mb-6" />
+        <h1 className="text-4xl font-bold text-gray-800 mb-3">Ďakujeme za vašu objednávku!</h1>
+        <p className="text-md text-gray-500 mb-6">Vaša objednávka bola úspešne prijatá a spracováva sa.</p>
+        
+        <OrderDetails sessionId={sessionId} />
 
-      <p className="text-gray-600 mb-8">Na váš e-mail sme zaslali potvrdenie objednávky. V prípade akýchkoľvek otázok nás neváhajte kontaktovať.</p>
+        <p className="text-sm text-gray-500 mb-8">Na váš e-mail sme zaslali potvrdenie objednávky. V prípade akýchkoľvek otázok nás neváhajte kontaktovať.</p>
 
-      <Link href="/eshop">
-        <span className="inline-block bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors duration-300">
-          Pokračovať v nákupe
-        </span>
-      </Link>
+        <Button asChild variant="outline" size="lg" className="bg-[#b4956d] text-white hover:bg-[#a88961] border-[#b4956d]">
+          <Link href="/eshop">Pokračovať v nákupe</Link>
+        </Button>
+      </div>
     </div>
   );
 }
