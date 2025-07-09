@@ -1,5 +1,39 @@
 # Využitie Supabase v Projekte
 
+Supabase je open-source alternatíva k Firebase a slúži ako komplexný backend pre tento projekt. Poskytuje sadu nástrojov, ktoré výrazne zjednodušujú a zrýchľujú vývoj.
+
+Podrobný popis architektúry sa nachádza v dokumente [Backend Architektúra](./backend.md).
+
+## Prehľad využívaných služieb
+
+### 1. Databáza (PostgreSQL)
+- **Popis:** Plnohodnotná PostgreSQL databáza, kde sú uložené všetky dáta aplikácie (produkty, objednávky, používatelia).
+- **Využitie:** Ukladanie a správa všetkých štruktúrovaných dát.
+- **Zabezpečenie:** Prístup je riadený pomocou Row-Level Security (RLS), čo zaisťuje, že používatelia vidia iba dáta, na ktoré majú oprávnenie.
+
+### 2. Autentifikácia (Auth)
+- **Popis:** Kompletné riešenie pre správu používateľov, prihlasovanie, registráciu a správu relácií.
+- **Využitie:** Prihlasovanie e-mailom a heslom, obnova hesla, správa používateľských účtov.
+- **Integrácia:** Pomocou balíčka `@supabase/ssr` je zaistená bezproblémová a bezpečná správa relácií v Next.js (Server a Client Components).
+
+### 3. Úložisko (Storage)
+- **Popis:** Služba na ukladanie a správu súborov, ako sú obrázky, videá alebo dokumenty.
+- **Využitie:** Primárne na ukladanie obrázkov k produktom.
+- **Funkcie:** Umožňuje optimalizáciu a transformáciu obrázkov on-the-fly (napr. zmena veľkosti).
+
+### 4. Edge Functions (v budúcnosti)
+- **Popis:** Serverless funkcie, ktoré bežia na okraji siete (edge), blízko k používateľom.
+- **Plánované využitie:** V budúcnosti môžu byť použité na komplexnejšie operácie, ktoré sa nehodia do bežnej aplikačnej logiky, napríklad generovanie reportov alebo integrácia s ďalšími službami.
+
+## Klientske knižnice
+
+Pre interakciu so Supabase sa využívajú dva typy klientov v adresári `/lib/supabase`:
+- **`client.ts`:** Pre použitie v Client Components (`'use client'`).
+- **`server.ts`:** Pre použitie v Server Components, Server Actions a API Routes.
+
+---
+*Posledná aktualizácia: 2025-07-09 12:54:46*
+
 Supabase je kľúčovou technológiou tohto projektu, ktorá zastrešuje databázu, backend, autentifikáciu a ukladanie súborov. Tento prístup (Backend-as-a-Service) výrazne zrýchľuje vývoj a znižuje náklady na správu infraštruktúry.
 
 ## 1. Databáza (PostgreSQL)

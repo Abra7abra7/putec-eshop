@@ -1,114 +1,110 @@
-# Schéma Databázy (Supabase - PostgreSQL)
+# Aktuálna Schéma Databázy (Supabase - PostgreSQL)
 
-Nasledujúca schéma je navrhnutá pre flexibilitu a škálovateľnosť. Všetky `id` stĺpce sú typu `UUID` a generované pomocou `gen_random_uuid()`. Všetky tabuľky obsahujú `created_at` a `updated_at` stĺpce pre sledovanie zmien.
+Toto je aktuálna štruktúra databázy projektu Vinárstvo Pútec. Databáza je navrhnutá tak, aby podporovala predaj produktov, správu zážitkov (degustácie, ubytovanie) a evidenciu dopytov od zákazníkov.
 
 ## Tabuľka: `products`
+Ukladá všetky detailné informácie o produktoch (vínach).
 
-Ukladá informácie o všetkých predajných produktoch (vína, príslušenstvo).
-
-| Názov stĺpca | Typ | Popis a obmedzenia |
-| --- | --- | --- |
-| `id` | `uuid` | **Primárny kľúč.** |
-| `created_at` | `timestamptz` | Dátum vytvorenia záznamu. `DEFAULT now()` |
-| `updated_at` | `timestamptz` | Dátum poslednej úpravy. `DEFAULT now()` |
-| `name` | `text` | Názov produktu. `NOT NULL` |
-| `description` | `text` | Senzorický a marketingový popis. |
-| `price` | `numeric(10, 2)` | Cena za jednotku v EUR. `NOT NULL`, `CHECK (price >= 0)` |
-| `stock` | `integer` | Počet kusov na sklade. `NOT NULL`, `DEFAULT 0` |
-| `sku` | `text` | Skladová jednotka. `UNIQUE`, `NOT NULL` |
-| `image_url` | `text` | Odkaz na hlavný obrázok v Supabase Storage. |
-| `gallery_urls` | `text[]` | Pole odkazov na ďalšie obrázky. |
-| `is_active` | `boolean` | Či je produkt aktívne v ponuke. `NOT NULL`, `DEFAULT true` |
-| `category_id` | `uuid` | Cudzí kľúč na `categories.id`. |
-| `year` | `integer` | Ročník vína (pre vína). |
-| `wine_region` | `text` | Vinohradnícka oblasť (pre vína). |
-| `alcohol_percentage` | `numeric(4, 1)` | Obsah alkoholu (pre vína). |
-| `attributes` | `jsonb` | Ostatné špecifické údaje (viď príklad nižšie). |
-
-**Príklad `attributes` pre víno:**
-```json
-{
-  "origin_designation": "Víno s chráneným označením pôvodu",
-  "classification_details": "Akostné, biele, polosuché",
-  "contains_sulfites": true,
-  "batch_number": "L.23",
-  "filling_date": "2025-02",
-  "acids_g_per_l": 6.6,
-  "residual_sugar_g_per_l": 10,
-  "grape_sugar_nm": 22,
-  "storage_temp_c": "10-12 °C",
-  "serving_temp_c": "10-12 °C",
-  "country_of_origin": "Slovensko",
-  "producer": "Pútec s.r.o. Pezinská 154, Vinosady 902 01",
-  "bottler": "Pútec s.r.o. Pezinská 154, Vinosady 902 01",
-  "ean_url": "https://eanonline.gs1sk.org/01/08582000037412"
-}
-```
+| Stĺpec | Typ | Povinné | Popis |
+|---|---|---|---|
+| `id` | `uuid` | Áno | Primárny kľúč (PK). |
+| `name` | `text` | Áno | Názov vína. |
+| `slug` | `text` | Nie | URL-friendly verzia názvu. |
+| `description` | `text` | Nie | Podrobný marketingový popis. |
+| `price` | `numeric` | Áno | Cena za jednotku. |
+| `stock` | `integer` | Áno | Počet kusov na sklade. |
+| `sku` | `text` | Áno | Unikátny kód produktu (Stock Keeping Unit). |
+| `ean` | `text` | Nie | Európsky kód tovaru (čiarový kód). |
+| `image_url` | `text` | Nie | URL hlavného obrázku produktu. |
+| `gallery_urls` | `text[]` | Nie | Pole URL adries pre galériu obrázkov. |
+| `is_active` | `boolean` | Áno | Určuje, či je produkt aktívny a viditeľný v e-shope. |
+| `category_id` | `uuid` | Nie | Odkaz na tabuľku `categories` (cudzí kľúč, FK). |
+| `rocnik` / `year` | `integer` | Nie | Ročník vína. |
+| `wine_region` | `text` | Nie | Vinohradnícka oblasť pôvodu. |
+| `alcohol_percentage`| `numeric` | Nie | Percentuálny obsah alkoholu. |
+| `farba_vina` | `text` | Nie | Farba vína (napr. "Biele"). |
+| `zvyskovy_cukor` | `text` | Nie | Klasifikácia podľa zvyškového cukru (napr. "Suché"). |
+| `vona` | `text` | Nie | Popis vône vína. |
+| `chut` | `text` | Nie | Popis chuti vína. |
+| `farba_popis` | `text` | Nie | Slovný popis farby vína. |
+| `attributes` | `jsonb` | Nie | Flexibilné pole pre ďalšie atribúty (napr. ocenenia). |
+| `created_at` | `timestamptz` | Áno | Čas vytvorenia záznamu. |
+| `updated_at` | `timestamptz` | Áno | Čas poslednej aktualizácie záznamu. |
 
 ## Tabuľka: `categories`
+Kategorizácia produktov (biele, červené, ružové) s možnosťou vnorenia.
 
-Číselník kategórií pre produkty (Biele víno, Červené víno, Príslušenstvo...).
+| Stĺpec | Typ | Povinné | Popis |
+|---|---|---|---|
+| `id` | `uuid` | Áno | Primárny kľúč (PK). |
+| `name` | `text` | Áno | Názov kategórie. |
+| `slug` | `text` | Áno | URL-friendly verzia názvu. |
+| `parent_id` | `uuid` | Nie | Odkaz na nadradenú kategóriu (pre vnorenie). |
+| `created_at` | `timestamptz` | Áno | Čas vytvorenia záznamu. |
+| `updated_at` | `timestamptz` | Áno | Čas poslednej aktualizácie záznamu. |
 
-| Názov stĺpca | Typ | Popis a obmedzenia |
-| --- | --- | --- |
-| `id` | `uuid` | **Primárny kľúč.** |
-| `name` | `text` | Názov kategórie. `NOT NULL`, `UNIQUE` |
-| `slug` | `text` | Unikátny reťazec pre URL. `NOT NULL`, `UNIQUE` |
-| `parent_id` | `uuid` | Cudzí kľúč na `categories.id` (pre podkategórie). `NULLABLE` |
+## Tabuľka: `orders`
+Ukladá informácie o objednávkach zákazníkov.
+
+| Stĺpec | Typ | Povinné | Popis |
+|---|---|---|---|
+| `id` | `uuid` | Áno | Primárny kľúč (PK). |
+| `user_id` | `uuid` | Nie | Odkaz na používateľa v tabuľke `auth.users` (FK). |
+| `total_price` | `numeric` | Áno | Celková cena objednávky. |
+| `status` | `enum` | Áno | Stav objednávky ('pending', 'paid', 'shipped', 'cancelled'). |
+| `payment_method`| `enum` | Áno | Použitá platobná metóda ('card', 'transfer'). |
+| `customer_details`| `jsonb` | Áno | Fakturačné a kontaktné údaje zákazníka. |
+| `shipping_details`| `jsonb` | Nie | Dodacie údaje (ak sú iné ako fakturačné). |
+| `stripe_session_id`|`text` | Nie | ID platobnej relácie zo Stripe. |
+| `created_at` | `timestamptz` | Áno | Čas vytvorenia záznamu. |
+| `updated_at` | `timestamptz` | Áno | Čas poslednej aktualizácie záznamu. |
+
+## Tabuľka: `order_items`
+Položky patriace ku konkrétnej objednávke.
+
+| Stĺpec | Typ | Povinné | Popis |
+|---|---|---|---|
+| `id` | `uuid` | Áno | Primárny kľúč (PK). |
+| `order_id` | `uuid` | Áno | Odkaz na tabuľku `orders` (FK). |
+| `product_id` | `uuid` | Áno | Odkaz na tabuľku `products` (FK). |
+| `quantity` | `integer` | Áno | Počet kusov produktu. |
+| `price_per_unit`| `numeric` | Áno | Cena za kus v čase objednávky. |
+| `created_at` | `timestamptz` | Áno | Čas vytvorenia záznamu. |
 
 ## Tabuľka: `experiences`
+Ukladá informácie o ponúkaných zážitkoch (degustácie, ubytovanie).
 
-Ukladá informácie o degustáciách a piknikových košoch.
-
-| Názov stĺpca | Typ | Popis a obmedzenia |
-| --- | --- | --- |
-| `id` | `uuid` | **Primárny kľúč.** |
-| `name` | `text` | Názov balíka. `NOT NULL` |
-| `slug` | `text` | Unikátny reťazec pre URL. `NOT NULL`, `UNIQUE` |
-| `type` | `enum('tasting', 'picnic')` | Typ zážitku. `NOT NULL` |
-| `description` | `text` | Marketingový popis. |
-| `base_price` | `numeric(10, 2)` | Základná cena balíka. |
-| `image_url` | `text` | Odkaz na prezentačný obrázok. |
-| `is_active` | `boolean` | Či je zážitok aktívne v ponuke. `NOT NULL`, `DEFAULT true` |
-| `attributes` | `jsonb` | Špecifické detaily balíka (viď príklady v zadaní). |
+| Stĺpec | Typ | Povinné | Popis |
+|---|---|---|---|
+| `id` | `uuid` | Áno | Primárny kľúč (PK). |
+| `name` | `text` | Áno | Názov zážitku. |
+| `slug` | `text` | Áno | URL-friendly verzia názvu. |
+| `type` | `enum` | Áno | Typ zážitku ('tasting', 'accommodation'). |
+| `description` | `text` | Nie | Podrobný popis zážitku. |
+| `base_price` | `numeric` | Nie | Základná cena (napr. na osobu). |
+| `image_url` | `text` | Nie | URL hlavného obrázku. |
+| `is_active` | `boolean` | Áno | Určuje, či je zážitok aktívne ponúkaný. |
+| `attributes` | `jsonb` | Nie | Flexibilné pole pre ďalšie detaily (napr. kapacita). |
+| `created_at` | `timestamptz` | Áno | Čas vytvorenia záznamu. |
+| `updated_at` | `timestamptz` | Áno | Čas poslednej aktualizácie záznamu. |
 
 ## Tabuľka: `inquiries`
+Evidencia dopytov od zákazníkov na konkrétne zážitky.
 
-Ukladá dopyty na zážitky.
+| Stĺpec | Typ | Povinné | Popis |
+|---|---|---|---|
+| `id` | `uuid` | Áno | Primárny kľúč (PK). |
+| `experience_id` | `uuid` | Áno | Odkaz na tabuľku `experiences` (FK). |
+| `customer_name` | `text` | Áno | Meno zákazníka. |
+| `customer_email`| `text` | Áno | E-mail zákazníka. |
+| `customer_phone`| `text` | Áno | Telefónne číslo zákazníka. |
+| `requested_date`| `date` | Nie | Požadovaný dátum konania. |
+| `requested_time`| `text` | Nie | Požadovaný čas konania. |
+| `number_of_people`|`integer`| Nie | Počet osôb. |
+| `message` | `text` | Nie | Správa od zákazníka. |
+| `status` | `enum` | Áno | Stav dopytu ('new', 'contacted', 'confirmed', 'closed'). |
+| `created_at` | `timestamptz` | Áno | Čas vytvorenia záznamu. |
+| `updated_at` | `timestamptz` | Áno | Čas poslednej aktualizácie záznamu. |
 
-| Názov stĺpca | Typ | Popis a obmedzenia |
-| --- | --- | --- |
-| `id` | `uuid` | **Primárny kľúč.** |
-| `experience_id` | `uuid` | Cudzí kľúč na `experiences.id`. `NOT NULL` |
-| `customer_name` | `text` | Meno zákazníka. `NOT NULL` |
-| `customer_email` | `text` | Email zákazníka. `NOT NULL` |
-| `customer_phone` | `text` | Telefón zákazníka. `NOT NULL` |
-| `requested_date` | `date` | Požadovaný dátum. |
-| `requested_time` | `text` | Požadovaný čas. |
-| `number_of_people` | `integer` | Požadovaný počet osôb. `CHECK (number_of_people > 0)` |
-| `message` | `text` | Doplňujúca správa od zákazníka. |
-| `status` | `enum('new', 'contacted', 'confirmed', 'closed')` | Stav dopytu. `NOT NULL`, `DEFAULT 'new'` |
-
-## Tabuľky: `orders` a `order_items`
-
-Štruktúra pre ukladanie objednávok.
-
-### `orders`
-| Názov stĺpca | Typ | Popis |
-| --- | --- | --- |
-| `id` | `uuid` | **Primárny kľúč.** |
-| `user_id` | `uuid` | Cudzí kľúč na `auth.users` (ak je zákazník prihlásený). |
-| `total_price` | `numeric(10, 2)` | Celková suma objednávky. |
-| `status` | `enum('pending', 'paid', 'cod', 'shipped', 'completed', 'canceled')` | Stav objednávky. |
-| `payment_method`| `enum('stripe', 'cod')` | Platobná metóda. |
-| `customer_details`| `jsonb` | Údaje o zákazníkovi (meno, adresa, firma...). |
-| `shipping_details`| `jsonb` | Údaje o doručení. |
-
-### `order_items`
-| Názov stĺpca | Typ | Popis |
-| --- | --- | --- |
-| `id` | `uuid` | **Primárny kľúč.** |
-| `order_id` | `uuid` | Cudzí kľúč na `orders.id`. `NOT NULL` |
-| `product_id` | `uuid` | Cudzí kľúč na `products.id`. `NOT NULL` |
-| `quantity` | `integer` | Počet kusov. `NOT NULL` |
-| `price_per_unit`| `numeric(10, 2)`| Cena za kus v čase objednávky. `NOT NULL` |
+---
+*Posledná aktualizácia: 2025-07-09 13:14:00*

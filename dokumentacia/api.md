@@ -1,5 +1,50 @@
 # API Endpoints a Server Actions
 
+Komunikácia so serverom je v projekte riešená dvoma hlavnými spôsobmi: **Server Actions** a **Route Handlers** (API Routes).
+
+## 1. Server Actions
+
+Server Actions sú preferovaným spôsobom pre operácie iniciované používateľom, ako je odosielanie formulárov. Umožňujú volať serverovú logiku priamo z React komponentov bez nutnosti manuálne vytvárať API endpointy.
+
+- **Použitie:** Prihlásenie, registrácia, pridanie produktu do košíka, odoslanie kontaktného formulára.
+- **Bezpečnosť:** Sú bezpečné voči CSRF útokom a zjednodušujú validáciu dát (napr. pomocou Zod), pretože validácia môže prebehnúť na serveri v rámci tej istej funkcie.
+- **Príklad (zjednodušený):**
+  ```typescript
+  // app/auth/actions.ts
+  'use server'
+
+  export async function login(formData: FormData) {
+    // 1. Validácia dát
+    // 2. Komunikácia so Supabase Auth
+    // 3. Presmerovanie používateľa
+  }
+  ```
+
+## 2. Route Handlers (API Routes)
+
+Tradičné API endpointy v adresári `/app/api` sa používajú primárne na komunikáciu s externými službami, najmä na spracovanie webhookov.
+
+### `POST /api/checkout`
+
+- **Účel:** Tento endpoint slúži ako webhook pre Stripe. Keď zákazník úspešne dokončí platbu cez Stripe Checkout, Stripe pošle na túto URL požiadavku s informáciami o platbe.
+- **Spracovanie:**
+  1. **Verifikácia požiadavky:** Endpoint najprv overí, či požiadavka skutočne prišla od Stripe pomocou tajného kľúča (webhook secret). Tým sa predchádza podvodným požiadavkám.
+  2. **Extrakcia dát:** Z tela požiadavky sa extrahujú potrebné informácie, ako sú ID zákazníka, zakúpené produkty a celková suma.
+  3. **Spracovanie objednávky:** Vytvorenie záznamu o objednávke v databáze po úspešnej platbe.
+  4. **Odoslanie e-mailu:** Zákazníkovi sa odošle potvrdzujúci e-mail o úspešnej objednávke pomocou služby Resend.
+- **Bezpečnosť:** Endpoint je chránený a spracováva iba požiadavky od Stripe.
+
+### `POST /api/inquiry`
+
+- **Účel:** Tento endpoint slúži na spracovanie kontaktných formulárov pre zážitky.
+- **Spracovanie:**
+  1. **Validácia dát:** Overenie, či požiadavka obsahuje všetky potrebné údaje.
+  2. **Uloženie dopytu:** Uloženie údajov z kontaktného formulára do tabuľky `inquiries`.
+  3. **Odoslanie notifikácie:** Spustenie odosielania notifikačných emailov cez Resend.
+
+---
+*Posledná aktualizácia: 2025-07-09 12:54:46*
+
 Architektúra aplikácie bude primárne využívať **Next.js Server Actions** pre formuláre a mutácie dát, čím sa minimalizuje potreba tradičných API endpointov. Dedikované API routes budú vytvorené len pre špecifické prípady, ako sú webhooky od externých služieb.
 
 ## 1. Server Actions

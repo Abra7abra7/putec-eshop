@@ -1,5 +1,23 @@
 # Dizajn a Vizuálny Štýl
 
+Celkový dizajn projektu je postavený na princípoch minimalizmu, čistoty a responzivity. Cieľom je poskytnúť príjemný a intuitívny používateľský zážitok na všetkých zariadeniach.
+
+## 1. Technologický základ
+
+- **[Tailwind CSS](https://tailwindcss.com):** Ako primárny CSS framework bol zvolený Tailwind CSS. Jeho "utility-first" prístup umožňuje rýchlo vytvárať komplexné a konzistentné rozhrania priamo v HTML (JSX) kóde. Všetky farby, písma a medzery sú definované v konfiguračnom súbore `tailwind.config.ts`, čo zaručuje jednotný vzhľad naprieč celou aplikáciou.
+
+- **[Shadcn/UI](https://ui.shadcn.com/):** Na Tailwind CSS je postavená knižnica komponentov Shadcn/UI. Nejde o tradičnú knižnicu, ale o kolekciu predpripravených, plne prispôsobiteľných a dostupných (accessible) React komponentov. Do projektu sa nekopíruje celá knižnica, ale iba konkrétne komponenty, ktoré potrebujeme (napr. `Button`, `Card`, `Dialog`). Tieto komponenty sú uložené v adresári `/components/ui` a môžeme ich ľubovoľne upravovať.
+
+## 2. Kľúčové prvky dizajnu
+
+- **Farebná paleta:** Paleta je inšpirovaná identitou vinárstva. Dominujú v nej zemité tóny, doplnené o akcentovú farbu pre dôležité prvky (tlačidlá, odkazy).
+- **Typografia:** Používa sa moderné a dobre čitateľné bezpätkové písmo (napr. Inter), ktoré je načítavané pomocou `next/font` pre optimálny výkon.
+- **Responzivita:** Všetky komponenty a stránky sú plne responzívne. Rozloženie sa plynule prispôsobuje rôznym veľkostiam obrazoviek, od mobilných telefónov až po veľké monitory. Zvláštna pozornosť bola venovaná mobilnej navigácii (`MobileNav.tsx`).
+- **Ikonografia:** Pre ikony sa využíva knižnica `lucide-react`, ktorá ponúka širokú škálu čistých a konzistentných ikon.
+
+---
+*Posledná aktualizácia: 2025-07-09 12:54:46*
+
 ## 1. Filozofia Dizajnu
 
 Dizajn e-shopu bude postavený na princípoch minimalizmu, elegancie a prehľadnosti. Cieľom je vytvoriť prémiový vizuálny zážitok, ktorý odráža kvalitu ponúkaných vín a služieb. Dôraz kladieme na vysokú čitateľnosť, intuitívnu navigáciu a vizuálnu konzistentnosť naprieč celou aplikáciou.

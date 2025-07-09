@@ -1,5 +1,55 @@
 # Implementačný Plán: Vinársky E-shop
 
+Tento dokument sleduje postup prác na projekte a definuje kľúčové fázy a úlohy.
+
+**Aktuálny stav:** Projekt je vo finálnej fáze vývoja. Väčšina kľúčových funkcií je implementovaná a prebieha testovanie a finalizácia.
+
+--- 
+
+### Fáza 1: Základy a Architektúra (Hotovo ✔️)
+- [x] Inicializácia Next.js projektu.
+- [x] Nastavenie a konfigurácia Tailwind CSS.
+- [x] Vytvorenie základnej štruktúry adresárov (`/app`, `/components`, `/lib`).
+- [x] Pripojenie k Supabase a nastavenie klientov.
+- [x] Vytvorenie základného layoutu (`Header`, `Footer`).
+
+### Fáza 2: E-shop a Produkty (Hotovo ✔️)
+- [x] Návrh a implementácia databázovej schémy (`products`, `categories`).
+- [x] Vytvorenie stránky s výpisom všetkých produktov.
+- [x] Vytvorenie stránky s detailom produktu.
+- [x] Implementácia kategórií a filtrovania produktov.
+- [x] Vytvorenie administrátorského rozhrania pre správu produktov (CRUD).
+
+### Fáza 3: Autentifikácia a Používatelia (Hotovo ✔️)
+- [x] Implementácia prihlásenia a registrácie pomocou Supabase Auth.
+- [x] Vytvorenie chránených trás pre administrátorov (`middleware.ts`).
+- [x] Návrh a implementácia tabuľky `profiles`.
+- [x] Vytvorenie stránky používateľského profilu.
+
+### Fáza 4: Nákupný Košík a Pokladňa (Hotovo ✔️)
+- [x] Implementácia správy nákupného košíka (pridanie, odobratie, aktualizácia).
+- [x] Integrácia Stripe Checkout pre spracovanie platieb.
+- [x] Vytvorenie webhooku pre spracovanie úspešných platieb.
+- [x] Návrh a implementácia schémy pre objednávky (`orders`, `order_items`).
+- [x] Zobrazenie histórie objednávok v profile používateľa.
+
+### Fáza 5: Komunikácia a Finalizácia (Prebieha ⏳)
+- [x] Integrácia Resend pre odosielanie transakčných e-mailov (potvrdenie objednávky).
+- [x] Implementácia kontaktného formulára.
+- [x] Finalizácia dizajnu a responzivity (vrátane mobilnej navigácie).
+- [ ] **Kompletná aktualizácia dokumentácie.**
+- [ ] Dôkladné testovanie všetkých funkcií.
+- [ ] Príprava na nasadenie (deployment).
+
+### Fáza 6: Budúce rozšírenia (Plánované 📝)
+- [ ] Integrácia rezervačného systému (Bookio) pre degustácie a ubytovanie.
+- [ ] Implementácia blogu alebo sekcie s novinkami.
+- [ ] Rozšírené možnosti filtrovania a triedenia produktov.
+- [ ] Zákaznícke recenzie a hodnotenia produktov.
+
+---
+*Posledná aktualizácia: 2025-07-09 12:54:46*
+
 Tento plán rozdeľuje vývoj projektu do logických fáz a úloh, aby bol proces systematický a prehľadný.
 
 ## Fáza 1: Základy a Nastavenie Projektu (1-2 dni)

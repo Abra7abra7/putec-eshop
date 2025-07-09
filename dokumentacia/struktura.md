@@ -1,5 +1,39 @@
 # Štruktúra Projektu
 
+Projekt má logickú a škálovateľnú štruktúru, ktorá oddeľuje jednotlivé časti aplikácie podľa ich funkcie. Využíva sa Next.js App Router.
+
+- **`/app`**: Jadro aplikácie, kde je definované routovanie a jednotlivé stránky.
+  - **`/(main)`**: Skupina pre hlavné, verejne prístupné stránky (Domov, O nás, E-shop, Kontakt, atď.).
+  - **`/admin`**: Zabezpečená sekcia pre administrátorov. Umožňuje správu produktov, objednávok a ďalších častí webu.
+  - **`/api`**: Serverové API trasy. Primárne slúži na spracovanie webhookov od externých služieb ako Stripe.
+    - `POST /api/checkout`: Webhook, ktorý spracuje úspešnú platbu a vytvorí objednávku v databáze.
+  - **`/auth`**: Stránky a logika pre autentifikáciu používateľov – prihlásenie, registrácia, obnova hesla.
+  - **`layout.tsx`**: Hlavný layout aplikácie, ktorý obaľuje všetky stránky. Definuje základnú HTML štruktúru, načítava globálne štýly a fonty.
+  - **`globals.css`**: Globálne CSS štýly a definície pre Tailwind CSS.
+
+- **`/components`**: Znovu použiteľné React komponenty, ktoré tvoria používateľské rozhranie.
+  - **`/ui`**: Základné UI prvky (atómy) generované knižnicou Shadcn/UI (napr. `Button.tsx`, `Input.tsx`, `Card.tsx`).
+  - **`/layout`**: Komponenty pre štruktúru stránky, ako `Header.tsx`, `Footer.tsx` a `MobileNav.tsx`.
+  - **Ostatné**: Špecifické, komplexnejšie komponenty (`ProductCard.tsx`, `LoginForm.tsx`, `CartButton.tsx`).
+
+- **`/lib`**: Pomocné funkcie, konfigurácie a logika pre komunikáciu s externými službami.
+  - **`supabase/`**: Obsahuje klientov (`client.ts`, `server.ts`) pre interakciu so Supabase z klientskej a serverovej strany.
+  - **`stripe.ts`**: Inštancia a konfigurácia Stripe klienta pre prácu s platbami.
+  - **`types.ts`**: TypeScript typové definície používané naprieč projektom.
+  - **`utils.ts`**: Všeobecné pomocné funkcie (napr. formátovanie meny, generovanie URL).
+
+- **`/emails`**: React komponenty, ktoré slúžia ako e-mailové šablóny. Tieto šablóny sú renderované a odosielané pomocou služby Resend.
+
+- **`/public`**: Adresár pre statické súbory, ako sú obrázky (`/images`), ikony a fonty, ktoré sú verejne prístupné.
+
+- **Konfiguračné súbory (root)**:
+  - `next.config.mjs`: Konfigurácia pre Next.js.
+  - `tailwind.config.ts`: Konfigurácia pre Tailwind CSS, vrátane definície farieb, fontov a ďalších dizajnových tokenov.
+  - `middleware.ts`: Next.js middleware, ktorý sa spúšťa pred spracovaním požiadavky. Využíva sa na ochranu trás a správu používateľských relácií.
+
+---
+*Posledná aktualizácia: 2025-07-09 12:54:46*
+
 Projekt bude organizovaný podľa štandardov moderných Next.js aplikácií s dôrazom na prehľadnosť a modularitu.
 
 ```bash

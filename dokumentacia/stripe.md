@@ -1,5 +1,47 @@
 # Integrácia Platobnej Brány (Stripe)
 
+Stripe je kľúčovou súčasťou e-shopu, ktorá zabezpečuje bezpečné a spoľahlivé spracovanie online platieb. Integrácia pokrýva celý životný cyklus platby.
+
+## Proces Platby (Checkout Flow)
+
+1.  **Vytvorenie platobnej relácie (Checkout Session):**
+    - Keď zákazník klikne na tlačidlo "Prejsť do pokladne", na serveri sa spustí Server Action.
+    - Táto akcia vytvorí v Stripe novú `Checkout Session`.
+    - Do session sa posielajú kľúčové informácie:
+        - **Položky (`line_items`):** Zoznam produktov v košíku, ich množstvo a cena.
+        - **Režim (`mode`):** Nastavený na `'payment'`, pretože ide o jednorazovú platbu.
+        - **URL adresy (`success_url`, `cancel_url`):** Adresy, na ktoré bude zákazník presmerovaný po úspešnej alebo zrušenej platbe.
+
+2.  **Presmerovanie na Stripe:**
+    - Po úspešnom vytvorení session vráti Stripe unikátnu URL adresu.
+    - Aplikácia presmeruje zákazníka na túto zabezpečenú stránku Stripe, kde zadá svoje platobné údaje (karta, Apple Pay, Google Pay).
+    - Celý proces zadávania citlivých údajov prebieha na strane Stripe, čím je zaistená maximálna bezpečnosť a zhoda s PCI DSS.
+
+3.  **Spracovanie výsledku platby (Webhook):**
+    - Po dokončení platby (úspešnej alebo neúspešnej) Stripe odošle asynchrónne upozornenie (webhook) na náš preddefinovaný API endpoint: `POST /api/checkout`.
+    - Tento endpoint je zodpovedný za:
+        - **Overenie požiadavky:** Skontroluje, či webhook skutočne prišiel od Stripe.
+        - **Spracovanie udalosti:** Na základe typu udalosti (napr. `checkout.session.completed`) vykoná potrebné kroky.
+        - **Vytvorenie objednávky:** Ak bola platba úspešná, v našej databáze sa vytvorí záznam o novej objednávke a aktualizuje sa stav skladu.
+        - **Odoslanie potvrdenia:** Zákazníkovi sa odošle e-mail s potvrdením objednávky.
+
+## Kľúčové súbory
+
+- **`/lib/stripe.ts`**: Inicializácia Stripe klienta s API kľúčmi.
+- **`/app/cart/actions.ts`** (príklad): Server Action, ktorá vytvára Checkout Session.
+- **`/app/api/checkout/route.ts`**: Route Handler, ktorý spracováva prichádzajúce webhooky od Stripe.
+
+## Premenné prostredia
+
+Pre správne fungovanie sú potrebné nasledujúce premenné v `.env.local`:
+
+- `STRIPE_SECRET_KEY`: Tajný kľúč pre komunikáciu so Stripe API.
+- `STRIPE_WEBHOOK_SECRET`: Kľúč pre overovanie webhookov.
+- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`: Verejný kľúč pre front-end.
+
+---
+*Posledná aktualizácia: 2025-07-09 12:54:46*
+
 **Stripe** bude použitý ako hlavná platobná brána pre spracovanie online platieb kartou. Integrácia bude využívať **Stripe Checkout**, čo je predpripravená a hosťovaná platobná stránka, ktorá zjednodušuje implementáciu a spĺňa bezpečnostné štandardy (PCI DSS).
 
 ## 1. Nastavenie

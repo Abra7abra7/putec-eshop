@@ -1,5 +1,25 @@
 # Dokumentácia Projektu: Pútec E-shop
 
+Táto dokumentácia poskytuje komplexný prehľad o architektúre, technológiách a implementácii e-shopu pre Vinárstvo Pútec. Slúži ako centrálny zdroj informácií pre vývojárov a správcov systému.
+
+**Stav projektu:** Aktívny vývoj (90% dokončené)
+
+## Kľúčové časti dokumentácie
+
+- **[Štruktúra Projektu](./struktura.md):** Detailný popis usporiadania súborov a adresárov.
+- **[Backend Architektúra](./backend.md):** Popisuje, ako Supabase slúži ako backend (databáza, autentifikácia, úložisko).
+- **[Front-end Architektúra](./front_end.md):** Vysvetľuje použitie Next.js, React komponentov a štýlovania.
+- **[Schéma Databázy](./schema_tabuliek.md):** Detailný návrh databázových tabuliek v Supabase.
+- **[API a Server Actions](./api.md):** Dokumentácia k API endpointom a serverovým akciám.
+- **[Integrácia Platobnej Brány (Stripe)](./stripe.md):** Popisuje proces spracovania platieb.
+- **[Integrácia Transakčných Emailov (Resend)](./resend.md):** Vysvetľuje odosielanie automatizovaných e-mailov.
+- **[Dizajn a Vizuálny Štýl](./design_style.md):** Informácie o použitých technológiách pre UI/UX.
+- **[Integrácia Rezervačného Systému (Bookio)](./bookio.md):** Stav a plán integrácie pre degustácie a ubytovanie.
+- **[Implementačný Plán](./plan.md):** Prehľad dokončených a plánovaných úloh.
+
+---
+*Posledná aktualizácia: 2025-07-09 12:54:46*
+
 **Dátum a čas poslednej aktualizácie:** 8. júl 2024, 10:11
 
 ## 1. Úvod a Prehľad Projektu

@@ -1,5 +1,38 @@
 # Integrácia Rezervačného Systému (Bookio)
 
+Táto časť dokumentácie popisuje plánovanú integráciu s externým rezervačným systémom Bookio. Cieľom je umožniť zákazníkom priamo cez e-shop rezervovať si degustácie alebo ubytovanie.
+
+**Stav:** Plánované
+
+## 1. Cieľ integrácie
+
+- **Rezervácia degustácií:** Zákazníci si budú môcť vybrať termín a počet osôb pre degustáciu priamo na webe.
+- **Rezervácia ubytovania:** Podobne ako pri degustáciách, bude možné rezervovať si pobyt v ubytovacích kapacitách vinárstva.
+- **Synchronizácia dostupnosti:** Dostupnosť termínov sa bude automaticky synchronizovať s Bookio, aby sa predišlo dvojitým rezerváciám.
+
+## 2. Technické riešenie (návrh)
+
+Integrácia bude pravdepodobne prebiehať jedným z dvoch spôsobov, v závislosti od možností, ktoré poskytuje Bookio API:
+
+### a) Vloženie widgetu (preferované)
+- Ak Bookio poskytuje embeddable widget (vložiteľný prvok), tento bude vložený na dedikovanú stránku (`/degustacie`, `/ubytovanie`).
+- Toto riešenie je rýchlejšie na implementáciu a menej náročné na údržbu, pretože celá logika rezervácie zostáva na strane Bookio.
+
+### b) Vlastná integrácia cez API
+- Ak widget nie je k dispozícii, bude potrebné vytvoriť vlastné rozhranie, ktoré bude komunikovať s Bookio API.
+- Tento prístup je náročnejší, ale poskytuje plnú kontrolu nad vzhľadom a správaním rezervačného formulára.
+- Vyžadovalo by si to vytvorenie nových Server Actions a Client Components na spracovanie výberu termínu, odoslanie rezervácie a zobrazenie potvrdenia.
+
+## 3. Ďalšie kroky
+
+1.  **Analýza Bookio API:** Zistiť, aké možnosti integrácie Bookio ponúka (dokumentácia, API kľúče, widgety).
+2.  **Rozhodnutie o prístupe:** Na základe analýzy zvoliť vhodný spôsob integrácie.
+3.  **Implementácia:** Vytvorenie potrebných stránok a komponentov v Next.js.
+4.  **Testovanie:** Dôkladné otestovanie celého rezervačného procesu.
+
+---
+*Posledná aktualizácia: 2025-07-09 12:54:46*
+
 Pre sprostredkovanie ubytovania využijeme externý rezervačný systém **Bookio**. Cieľom je poskytnúť zákazníkom možnosť rezervácie priamo na našom webe bez toho, aby sme museli vyvíjať a spravovať komplexný rezervačný systém.
 
 ## 1. Preferovaná Metóda: iFrame

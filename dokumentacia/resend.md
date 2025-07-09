@@ -1,5 +1,60 @@
 # Integrácia Transakčných Emailov (Resend)
 
+Resend je moderná služba na odosielanie transakčných e-mailov, ktorá je v projekte využívaná na komunikáciu so zákazníkmi po kľúčových udalostiach, ako je napríklad vytvorenie objednávky.
+
+## Kľúčové vlastnosti integrácie
+
+### 1. E-mailové šablóny ako React komponenty
+
+Najväčšou výhodou tejto integrácie je možnosť vytvárať e-mailové šablóny priamo ako React komponenty. Tým sa dosahuje:
+
+- **Jednoduchá údržba:** Dizajn a obsah e-mailov sa upravuje rovnako ako akákoľvek iná časť webu.
+- **Znovu použiteľnosť:** Komponenty môžu byť ľahko opakovane použité a prispôsobené.
+- **Typová kontrola:** Vďaka TypeScriptu máme istotu, že do šablón posielame správne dáta (napr. meno zákazníka, číslo objednávky).
+
+Šablóny sú umiestnené v adresári `/emails`.
+
+- **Príklad (`/emails/OrderConfirmation.tsx`):**
+  ```tsx
+  import { Body, Container, Heading, Text } from '@react-email/components';
+  import * as React from 'react';
+
+  interface OrderConfirmationEmailProps {
+    customerName: string;
+    orderId: string;
+  }
+
+  export const OrderConfirmationEmail = ({ customerName, orderId }: OrderConfirmationEmailProps) => (
+    <Container>
+      <Heading>Ďakujeme za vašu objednávku!</Heading>
+      <Text>Ahoj {customerName},</Text>
+      <Text>Vaša objednávka s číslom {orderId} bola úspešne prijatá.</Text>
+    </Container>
+  );
+  ```
+
+### 2. Proces odosielania
+
+- **Inicializácia:** Klient pre Resend je inicializovaný v `/lib/resend.ts` pomocou API kľúča.
+- **Spúšťanie:** Odosielanie e-mailov je spúšťané zo serverovej logiky, najčastejšie po spracovaní webhooku od Stripe alebo po inej dôležitej akcii.
+- **Renderovanie:** Pred odoslaním sa príslušný React komponent (e-mailová šablóna) vyrenderuje do HTML.
+- **Odoslanie:** Vyrenderované HTML sa spolu s ďalšími údajmi (príjemca, predmet) odošle cez Resend API.
+
+## Používané e-maily
+
+- **Potvrdenie objednávky:** Odosiela sa zákazníkovi po úspešnom dokončení platby.
+- **Potvrdenie registrácie:** E-mail s overovacím linkom po vytvorení nového účtu.
+- **Obnova hesla:** E-mail s inštrukciami na resetovanie zabudnutého hesla.
+
+## Premenné prostredia
+
+Pre fungovanie je potrebný kľúč v `.env.local`:
+
+- `RESEND_API_KEY`: API kľúč pre prístup k službe Resend.
+
+---
+*Posledná aktualizácia: 2025-07-09 12:54:46*
+
 **Resend** bude slúžiť ako služba na spoľahlivé odosielanie a doručovanie všetkých automatizovaných emailov zákazníkom a administrátorom. Využijeme ich React Email knižnicu na vytváranie pekných a responzívnych emailových šablón pomocou React komponentov.
 
 ## 1. Nastavenie
