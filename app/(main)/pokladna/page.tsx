@@ -16,7 +16,7 @@ import Image from 'next/image';
 const checkoutFormSchema = z.object({
   customerType: z.enum(['individual', 'company'], { required_error: 'Vyberte typ zákazníka' }),
   email: z.string().email({ message: 'Zadajte platnú e-mailovú adresu.' }),
-  phone: z.string().min(10, { message: 'Telefónne číslo musí mať aspoň 10 znakov.' }),
+  phone: z.string().optional(),
   firstName: z.string().min(1, { message: 'Meno je povinné.' }),
   lastName: z.string().min(1, { message: 'Priezvisko je povinné.' }),
   companyName: z.string().optional(),
@@ -211,24 +211,28 @@ export default function PokladnaPage() {
                   <CardTitle>Súhrn objednávky</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                                        {items.map((item) => (
-                      <div key={item.product.id} className="flex justify-between items-center">
+                  <ul className="space-y-4">
+                    {items.map((item) => (
+                      <li key={item.product.id} className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
-                          <div className="relative w-16 h-16 bg-gray-100 rounded-md overflow-hidden">
-                            <Image src={item.product.image_url || ''} alt={item.product.name} fill style={{objectFit: 'contain'}}/>
-                          </div>
+                          <Image
+                            src={item.product.image_url || '/images/placeholder.webp'}
+                            alt={item.product.name}
+                            width={64}
+                            height={64}
+                            className="rounded-md object-cover h-16 w-16"
+                          />
                           <div>
-                            <p className="font-semibold">{item.product.name}</p>
-                            <p className="text-sm text-muted-foreground">Množstvo: {item.quantity}</p>
+                            <span className="font-semibold">{item.product.name}</span>
+                            <p className="text-sm text-muted-foreground">Počet: {item.quantity}</p>
                           </div>
                         </div>
-                        <p className="font-semibold">{(item.product.price * item.quantity).toFixed(2)} €</p>
-                      </div>
+                        <span className="font-semibold">{(item.product.price * item.quantity).toFixed(2)} €</span>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                   <div className="border-t mt-4 pt-4 space-y-2">
-                     <div className="flex justify-between">
+                    <div className="flex justify-between">
                       <span>Medzisúčet</span>
                       <span>{totalPrice.toFixed(2)} €</span>
                     </div>

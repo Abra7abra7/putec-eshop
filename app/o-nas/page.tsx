@@ -8,25 +8,25 @@ export default function ONasPage() {
       name: 'Vinár a hospodár',
       role: 'Strážca tradície',
       bio: 'S vášňou a odbornosťou dohliada na každý krok, od rezu viniča až po finálne dozrievanie vína v pivnici. Jeho rukami prechádza dedičstvo, ktoré s hrdosťou odovzdáva ďalej.',
-      image: '/images/degustacie/Brano-degustácia-x.webp',
+      image: '/images/degustacie/degustacia-brano.webp',
     },
     {
       name: 'Srdce vinárstva',
       role: 'Tvorca zážitkov',
       bio: 'Stará sa o to, aby príbeh nášho vinárstva ožil pri každej degustácii a návšteve. S úsmevom a pohostinnosťou otvára dvere do nášho sveta všetkým milovníkom vína.',
-      image: '/images/ubytovanie/degustačná.webp',
+      image: '/images/ubytovanie/ubytovanie-degustacna.webp',
     },
   ];
 
   const galleryImages = [
-    { src: '/images/ubytovanie/dvor s kostolom.webp', alt: 'Pohľad na vinárstvo a okolie' },
-    { src: '/images/degustacie/ruky-x.webp', alt: 'Poctivá práca vo vinici' },
-    { src: '/images/degustacie/sudy-x.webp', alt: 'Naše víno zreje v dubových sudoch' },
-    { src: '/images/degustacie/misa-x.webp', alt: 'Čerstvo oberané hrozno' },
-    { src: '/images/ubytovanie/Altánok.webp', alt: 'Miesto pre oddych a degustácie' },
-    { src: '/images/degustacie/degustácia-x.webp', alt: 'Pripravené na degustáciu' },
-    { src: '/images/ubytovanie/IMG_6011-2.webp', alt: 'Vinice z vtáčej perspektívy' },
-    { src: '/images/degustacie/jama-x.webp', alt: 'Tradičná pivnica' },
+    { src: '/images/ubytovanie/dvor-s-kostolom.webp', alt: 'Pohľad na vinárstvo a okolie' },
+    { src: '/images/degustacie/praca-vo-vinici.webp', alt: 'Poctivá práca vo vinici' },
+    { src: '/images/degustacie/dubove-sudy.webp', alt: 'Naše víno zreje v dubových sudoch' },
+    { src: '/images/degustacie/obcerstvenie-misa.webp', alt: 'Čerstvo oberané hrozno' },
+    { src: '/images/ubytovanie/altanok.webp', alt: 'Miesto pre oddych a degustácie' },
+    { src: '/images/degustacie/degustacia-pohare.webp', alt: 'Pripravené na degustáciu' },
+    { src: '/images/ubytovanie/vinice-z-vysky.webp', alt: 'Vinice z vtáčej perspektívy' },
+    { src: '/images/degustacie/vstup-do-pivnice.webp', alt: 'Tradičná pivnica' },
   ];
 
   const faqData = [
@@ -41,7 +41,7 @@ export default function ONasPage() {
       {/* Hero Section */}
       <section className="relative h-[50vh] flex items-center justify-center text-center text-white">
         <Image
-          src="/images/ubytovanie/dvor so sudom.webp"
+          src="/images/ubytovanie/dvor-so-sudom.webp"
           alt="Rodinné vinárstvo Pútec"
           fill
           style={{ objectFit: 'cover' }}

@@ -35,7 +35,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             />
           ) : (
             <Image
-              src="/images/degustacie/degustačná-x.webp"
+              src="/images/degustacie/degustacna-miestnost.webp"
               alt="Záložný obrázok produktu"
               fill
               className="object-cover transition-transform duration-300 group-hover:scale-105"

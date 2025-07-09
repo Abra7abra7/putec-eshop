@@ -52,7 +52,7 @@ export default async function Home() {
         <div className="container mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">
           <div className="relative w-full h-80 md:h-[450px] rounded-xl overflow-hidden shadow-lg">
             <Image 
-              src="/images/ubytovanie/dvor s kostolom.webp" 
+              src="/images/ubytovanie/dvor-s-kostolom.webp" 
               alt="Rodinné vinárstvo Pútec"
               fill 
               style={{ objectFit: 'cover' }}
@@ -108,7 +108,7 @@ export default async function Home() {
             {/* Degustácie Card */}
             <div className="bg-background rounded-xl overflow-hidden shadow-lg flex flex-col">
               <div className="relative w-full h-64">
-                <Image src="/images/degustacie/degustácia-x.webp" alt="Degustácia vo vinárstve" fill style={{ objectFit: 'cover' }} />
+                <Image src="/images/degustacie/degustacia-pohare.webp" alt="Degustácia vo vinárstve" fill style={{ objectFit: 'cover' }} />
               </div>
               <div className="p-8 flex flex-col flex-grow">
                 <h3 className="text-3xl font-bold text-primary mb-4">Degustácie</h3>
@@ -121,7 +121,7 @@ export default async function Home() {
             {/* Ubytovanie Card */}
             <div className="bg-background rounded-xl overflow-hidden shadow-lg flex flex-col">
               <div className="relative w-full h-64">
-                <Image src="/images/ubytovanie/Altánok.webp" alt="Ubytovanie vo vinárstve" fill style={{ objectFit: 'cover' }} />
+                <Image src="/images/ubytovanie/altanok.webp" alt="Ubytovanie vo vinárstve" fill style={{ objectFit: 'cover' }} />
               </div>
               <div className="p-8 flex flex-col flex-grow">
                 <h3 className="text-3xl font-bold text-primary mb-4">Ubytovanie</h3>

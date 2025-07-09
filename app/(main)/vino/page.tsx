@@ -56,7 +56,7 @@ export default async function VinoPage({ searchParams }: VinoPageProps) {
       {/* Hero Section */}
       <section className="relative h-[50vh] flex items-center justify-center text-center text-white">
         <Image
-          src="/images/degustacie/sudy-x.webp"
+          src="/images/degustacie/dubove-sudy.webp"
           alt="Pivnica plná sudov s vínom"
           fill
           style={{ objectFit: 'cover' }}

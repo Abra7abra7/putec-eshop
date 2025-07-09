@@ -9,13 +9,13 @@ export default function UbytovaniePage() {
       nazov: 'Dvojlôžková izba Standard',
       popis: 'Útulná izba pre dve osoby s manželskou posteľou, modernou kúpeľňou a výhľadom do tichého dvora. Ideálna pre páry hľadajúce pokojný oddych po dni strávenom degustáciou.',
       cena: 'od 70 € / noc',
-      obrazok: '/images/ubytovanie/Izba interier.webp',
+      obrazok: '/images/ubytovanie/izba-interier.webp',
     },
     {
       nazov: 'Apartmán s výhľadom na vinice',
       popis: 'Priestranný apartmán s oddelenou spálňou, plne vybavenou kuchynkou, obývacou časťou a súkromným balkónom s nádherným výhľadom priamo na naše vinice. Dokonalá voľba pre náročnejších hostí.',
       cena: 'od 110 € / noc',
-      obrazok: '/images/ubytovanie/IMG_5835.webp',
+      obrazok: '/images/ubytovanie/izba-stol.webp',
     },
   ];
 
@@ -30,14 +30,14 @@ export default function UbytovaniePage() {
   ];
 
   const galleryImages = [
-    { src: '/images/ubytovanie/Altánok.webp', alt: 'Altánok s posedením' },
-    { src: '/images/ubytovanie/dvor s kostolom.webp', alt: 'Pohľad na dvor s kostolom v pozadí' },
-    { src: '/images/ubytovanie/kuchyna.webp', alt: 'Plne vybavená kuchynka v apartmáne' },
-    { src: '/images/ubytovanie/Izba interier.webp', alt: 'Interiér izby' },
-    { src: '/images/ubytovanie/dvor so sudom.webp', alt: 'Dvor s dreveným sudom' },
-    { src: '/images/ubytovanie/Kuchyna linka.webp', alt: 'Detail kuchynskej linky v apartmáne' },
-    { src: '/images/ubytovanie/IMG_5787.webp', alt: 'Interiér ubytovania' },
-    { src: '/images/ubytovanie/IMG_6011-2.webp', alt: 'Pohľad na vinárstvo z diaľky' },
+    { src: '/images/ubytovanie/altanok.webp', alt: 'Altánok s posedením' },
+    { src: '/images/ubytovanie/dvor-s-kostolom.webp', alt: 'Pohľad na dvor s kostolom v pozadí' },
+    { src: '/images/ubytovanie/kuchyna-pohlad.webp', alt: 'Plne vybavená kuchynka v apartmáne' },
+    { src: '/images/ubytovanie/izba-interier.webp', alt: 'Interiér izby' },
+    { src: '/images/ubytovanie/dvor-so-sudom.webp', alt: 'Dvor s dreveným sudom' },
+    { src: '/images/ubytovanie/kuchynska-linka.webp', alt: 'Detail kuchynskej linky v apartmáne' },
+    { src: '/images/ubytovanie/izba-postel.webp', alt: 'Interiér ubytovania' },
+    { src: '/images/ubytovanie/vinice-z-vysky.webp', alt: 'Pohľad na vinárstvo z diaľky' },
   ];
 
   const faqData = [
@@ -53,7 +53,7 @@ export default function UbytovaniePage() {
       {/* Hero Section */}
       <section className="relative h-[50vh] flex items-center justify-center text-center text-white">
         <Image
-          src="/images/ubytovanie/dvor s kostolom.webp"
+          src="/images/ubytovanie/dvor-s-kostolom.webp"
           alt="Pohľad na dvor vinárstva Pútec s kostolom v pozadí"
           fill
           style={{ objectFit: 'cover' }}

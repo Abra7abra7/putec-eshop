@@ -26,7 +26,7 @@ export default function KontaktPage() {
       {/* Hero Section */}
       <section className="relative h-[50vh] flex items-center justify-center text-center text-white">
         <Image
-          src="/images/ubytovanie/dvor s kostolom.webp"
+          src="/images/ubytovanie/dvor-s-kostolom.webp"
           alt="Vinárstvo Pútec"
           fill
           style={{ objectFit: 'cover' }}

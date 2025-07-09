@@ -11,7 +11,7 @@ export default function DegustaciePage() {
       cena: '15 € / osoba',
       trvanie: 'cca 60 minút',
       pocetVzoriek: '5 vzoriek',
-      obrazok: '/images/degustacie/degustácia-x.webp',
+      obrazok: '/images/degustacie/degustacia-pohare.webp',
     },
     {
       nazov: 'Rozšírená degustácia',
@@ -19,7 +19,7 @@ export default function DegustaciePage() {
       cena: '25 € / osoba',
       trvanie: 'cca 90 minút',
       pocetVzoriek: '8 vzoriek',
-      obrazok: '/images/degustacie/misa-x.webp',
+      obrazok: '/images/degustacie/obcerstvenie-misa.webp',
     },
     {
       nazov: 'Prémiová degustácia',
@@ -27,19 +27,19 @@ export default function DegustaciePage() {
       cena: '40 € / osoba',
       trvanie: 'cca 120 minút',
       pocetVzoriek: '10 vzoriek',
-      obrazok: '/images/degustacie/degustácia-brano-x.webp',
+      obrazok: '/images/degustacie/degustacia-brano-detail.webp',
     },
   ];
 
   const galleryImages = [
-    { src: '/images/degustacie/degustácia-x.webp', alt: 'Detail na nalievanie vína' },
-    { src: '/images/degustacie/sudy-x.webp', alt: 'Drevené sudy v pivnici' },
-    { src: '/images/degustacie/misa-x.webp', alt: 'Občerstvenie k degustácii' },
-    { src: '/images/degustacie/Brano-degustácia-x.webp', alt: 'Degustácia s vinárom' },
-    { src: '/images/degustacie/IMG_5508-6-x.webp', alt: 'Poháre s vínom pripravené na degustáciu' },
-    { src: '/images/degustacie/jama-x.webp', alt: 'Vstup do vínnej pivnice' },
-    { src: '/images/degustacie/degustačná-x.webp', alt: 'Priestory degustačnej miestnosti' },
-    { src: '/images/degustacie/degustácia-brano-x.webp', alt: 'Vinár Braňo pri výklade' },
+    { src: '/images/degustacie/degustacia-pohare.webp', alt: 'Detail na nalievanie vína' },
+    { src: '/images/degustacie/dubove-sudy.webp', alt: 'Drevené sudy v pivnici' },
+    { src: '/images/degustacie/obcerstvenie-misa.webp', alt: 'Občerstvenie k degustácii' },
+    { src: '/images/degustacie/degustacia-brano.webp', alt: 'Degustácia s vinárom' },
+    { src: '/images/degustacie/pohare-na-stole.webp', alt: 'Poháre s vínom pripravené na degustáciu' },
+    { src: '/images/degustacie/vstup-do-pivnice.webp', alt: 'Vstup do vínnej pivnice' },
+    { src: '/images/degustacie/degustacna-miestnost.webp', alt: 'Priestory degustačnej miestnosti' },
+    { src: '/images/degustacie/degustacia-brano-detail.webp', alt: 'Vinár Braňo pri výklade' },
   ];
 
   const faqData = [
@@ -55,7 +55,7 @@ export default function DegustaciePage() {
       {/* Hero Section */}
       <section className="relative h-[50vh] flex items-center justify-center text-center text-white">
         <Image
-          src="/images/ubytovanie/degustačná.webp"
+          src="/images/ubytovanie/ubytovanie-degustacna.webp"
           alt="Degustačná miestnosť vo vinárstve Pútec"
           fill
           style={{ objectFit: 'cover' }}
