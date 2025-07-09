@@ -54,13 +54,31 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser();
 
-  // Ochrana /admin ciest
-  if (request.nextUrl.pathname.startsWith('/admin') && !user) {
-    // Ak používateľ nie je prihlásený a snaží sa dostať do /admin,
-    // presmerujeme ho na správnu prihlasovaciu stránku
-    return NextResponse.redirect(new URL('/auth/login', request.url))
+  // Protect /admin and /account routes
+  if (
+    request.nextUrl.pathname.startsWith('/admin') ||
+    request.nextUrl.pathname.startsWith('/account')
+  ) {
+    if (!user) {
+      // If user is not logged in, redirect to login page
+      return NextResponse.redirect(new URL('/auth/login', request.url));
+    }
+
+    // If user is logged in and tries to access /admin, check their role
+    if (request.nextUrl.pathname.startsWith('/admin')) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+      // If profile doesn't exist or role is not 'admin', redirect to home page
+      if (!profile || profile.role !== 'admin') {
+        return NextResponse.redirect(new URL('/', request.url));
+      }
+    }
   }
 
   return response

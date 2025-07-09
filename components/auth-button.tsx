@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from './ui/button';
-import { LogoutButton } from './logout-button';
+import { signOut } from '@/app/auth/actions';
 
 export async function AuthButton() {
   const supabase = await createClient();
@@ -41,7 +41,7 @@ export async function AuthButton() {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">Profil</p>
+            <p className="text-sm font-medium leading-none">Prihlásený ako</p>
             <p className="text-xs leading-none text-muted-foreground">
               {user.email}
             </p>
@@ -49,7 +49,15 @@ export async function AuthButton() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <LogoutButton />
+          <Link href="/account">Profil</Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <form action={signOut} className="w-full">
+            <button type="submit" className="w-full text-left">
+              Odhlásiť sa
+            </button>
+          </form>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
