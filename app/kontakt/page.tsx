@@ -15,9 +15,9 @@ export default function KontaktPage() {
   ];
 
   const contactDetails = [
-    { icon: Building, title: 'Adresa', lines: ['Vinohradnícka 123', '902 01 Pezinok', 'Slovensko'] },
-    { icon: Phone, title: 'Telefón', lines: ['+421 900 123 456'], link: 'tel:+421900123456' },
-    { icon: Mail, title: 'E-mail', lines: ['rezervacie@putec.sk'], link: 'mailto:rezervacie@putec.sk' },
+    { icon: Building, title: 'Adresa', lines: ['Pezinská 154', '90201 Vinosady'] },
+    { icon: Phone, title: 'Telefón', lines: ['+421 911 250 400'], link: 'tel:+421911250400' },
+    { icon: Mail, title: 'E-mail', lines: ['info@vinoputec.sk'], link: 'mailto:info@vinoputec.sk' },
     { icon: Clock, title: 'Otváracie Hodiny', lines: ['Po - Pia: 10:00 - 18:00', 'So: 10:00 - 14:00 (alebo podľa dohody)', 'Ne: Zatvorené'] },
   ];
 

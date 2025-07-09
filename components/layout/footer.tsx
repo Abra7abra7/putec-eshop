@@ -14,9 +14,9 @@ export const Footer = () => {
           </Link>
           <p className="text-muted-foreground mt-2 mb-4">Vinárstvo s tradíciou, chuťou a srdcom.</p>
           <div className="space-y-2 text-muted-foreground">
-            <p className="flex items-center"><MapPin className="h-4 w-4 mr-2 shrink-0"/> Vinohradnícka 123, 902 01 Pezinok</p>
-            <a href="mailto:rezervacie@putec.sk" className="flex items-center hover:text-primary transition-colors"><Mail className="h-4 w-4 mr-2 shrink-0"/> rezervacie@putec.sk</a>
-            <a href="tel:+4219XXYYYZZZ" className="flex items-center hover:text-primary transition-colors"><Phone className="h-4 w-4 mr-2 shrink-0"/> +421 9XX YYY ZZZ</a>
+            <p className="flex items-center"><MapPin className="h-4 w-4 mr-2 shrink-0"/> Pezinská 154, 90201 Vinosady</p>
+            <a href="mailto:info@vinoputec.sk" className="flex items-center hover:text-primary transition-colors"><Mail className="h-4 w-4 mr-2 shrink-0"/> info@vinoputec.sk</a>
+            <a href="tel:+421911250400" className="flex items-center hover:text-primary transition-colors"><Phone className="h-4 w-4 mr-2 shrink-0"/> +421 911 250 400</a>
           </div>
         </div>
 

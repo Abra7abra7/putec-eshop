@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const checkoutFormSchema = z.object({
   customerType: z.enum(['individual', 'company'], { required_error: 'Vyberte typ zákazníka' }),
@@ -112,7 +113,12 @@ export default function PokladnaPage() {
   }
 
   return (
-    <div className="container py-12">
+    <div className="container mx-auto px-4 py-12 md:px-6">
+      <div className="mx-auto max-w-max mb-8">
+        <Link href="/">
+          <Image src="/logo.png" alt="Vinárstvo Pútec Logo" width={120} height={42} className="h-12 w-auto" />
+        </Link>
+      </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">

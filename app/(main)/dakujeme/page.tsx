@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { CircleCheckBig } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
 // Definovanie typov pre lepšiu prácu s dátami
 type OrderItem = {
@@ -60,6 +61,9 @@ export default function DakujemePage({ searchParams }: { searchParams: any }) {
   return (
     <div className="container mx-auto my-24">
       <div className="max-w-2xl mx-auto border rounded-lg p-12 flex flex-col items-center text-center shadow-sm">
+        <Link href="/" className="mb-8">
+          <Image src="/logo.png" alt="Vinárstvo Pútec Logo" width={120} height={42} className="h-12 w-auto" />
+        </Link>
         <CircleCheckBig className="h-20 w-20 text-green-600 mb-6" />
         <h1 className="text-4xl font-bold text-gray-800 mb-3">Ďakujeme za vašu objednávku!</h1>
         <p className="text-md text-gray-500 mb-6">Vaša objednávka bola úspešne prijatá a spracováva sa.</p>
