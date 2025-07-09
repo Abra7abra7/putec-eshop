@@ -84,7 +84,7 @@ export default async function Home() {
           </div>
           <div className="relative w-full h-80 md:h-[450px] rounded-xl overflow-hidden shadow-lg">
             <Image 
-              src="/images/ubytovanie/Izba interier.webp" 
+              src="/images/hero/hero.webp" 
               alt="Ubytovanie vo vinárstve Pútec" 
               fill 
               style={{ objectFit: 'cover' }}

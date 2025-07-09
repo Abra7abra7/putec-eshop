@@ -49,10 +49,10 @@ export default async function ProductDetailPage({ params }: { params: any }) {
           <p className="text-2xl font-semibold text-red-600 mb-4">{product.price.toFixed(2)} €</p>
           <p className="text-gray-700 mb-6">{product.description}</p>
 
-          <div className="border-t pt-4 mt-4 mb-6 space-y-2">
-            {product.year && (
+          <div className="border-t pt-4 mt-4 mb-6 space-y-4">
+            {product.rocnik && (
               <p className="text-sm text-gray-800">
-                <strong>Ročník:</strong> {product.year}
+                <strong>Ročník:</strong> {product.rocnik}
               </p>
             )}
             {product.wine_region && (
@@ -63,6 +63,51 @@ export default async function ProductDetailPage({ params }: { params: any }) {
             {product.alcohol_percentage && (
               <p className="text-sm text-gray-800">
                 <strong>Alkohol:</strong> {product.alcohol_percentage}%
+              </p>
+            )}
+            {product.farba_vina && (
+              <p className="text-sm text-gray-800">
+                <strong>Farba:</strong> {product.farba_vina.charAt(0).toUpperCase() + product.farba_vina.slice(1)}
+              </p>
+            )}
+            {product.zvyskovy_cukor && (
+              <p className="text-sm text-gray-800">
+                <strong>Zvyškový cukor:</strong> {product.zvyskovy_cukor.charAt(0).toUpperCase() + product.zvyskovy_cukor.slice(1)}
+              </p>
+            )}
+            {product.residual_sugar && (
+              <p className="text-sm text-gray-800">
+                <strong>Zvyškový cukor:</strong> {product.residual_sugar}
+              </p>
+            )}
+            {product.acids && (
+              <p className="text-sm text-gray-800">
+                <strong>Kyseliny:</strong> {product.acids} g/l
+              </p>
+            )}
+            {product.volume && (
+              <p className="text-sm text-gray-800">
+                <strong>Objem:</strong> {product.volume} l
+              </p>
+            )}
+            {product.farba_popis && (
+              <p className="text-sm text-gray-800">
+                <strong>Popis farby:</strong> {product.farba_popis}
+              </p>
+            )}
+            {product.vona && (
+              <p className="text-sm text-gray-800">
+                <strong>Vôňa:</strong> {product.vona}
+              </p>
+            )}
+            {product.chut && (
+              <p className="text-sm text-gray-800">
+                <strong>Chuť:</strong> {product.chut}
+              </p>
+            )}
+            {product.ean && (
+              <p className="text-sm text-gray-800">
+                <strong>EAN:</strong> {product.ean}
               </p>
             )}
             {product.attributes && (

@@ -11,6 +11,7 @@ export default function DegustaciePage() {
       cena: '15 € / osoba',
       trvanie: 'cca 60 minút',
       pocetVzoriek: '5 vzoriek',
+      obrazok: '/images/degustacie/degustácia-x.webp',
     },
     {
       nazov: 'Rozšírená degustácia',
@@ -18,6 +19,7 @@ export default function DegustaciePage() {
       cena: '25 € / osoba',
       trvanie: 'cca 90 minút',
       pocetVzoriek: '8 vzoriek',
+      obrazok: '/images/degustacie/misa-x.webp',
     },
     {
       nazov: 'Prémiová degustácia',
@@ -25,6 +27,7 @@ export default function DegustaciePage() {
       cena: '40 € / osoba',
       trvanie: 'cca 120 minút',
       pocetVzoriek: '10 vzoriek',
+      obrazok: '/images/degustacie/degustácia-brano-x.webp',
     },
   ];
 
@@ -52,8 +55,8 @@ export default function DegustaciePage() {
       {/* Hero Section */}
       <section className="relative h-[50vh] flex items-center justify-center text-center text-white">
         <Image
-          src="/images/degustacie/sudy-x.webp"
-          alt="Sudy v pivnici vinárstva Pútec"
+          src="/images/ubytovanie/degustačná.webp"
+          alt="Degustačná miestnosť vo vinárstve Pútec"
           fill
           style={{ objectFit: 'cover' }}
           className="z-0 brightness-50"
@@ -84,13 +87,22 @@ export default function DegustaciePage() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {degustacie.map((degustacia) => (
-              <div key={degustacia.nazov} className="border rounded-xl p-8 flex flex-col transition-all duration-300 hover:shadow-xl hover:border-primary/50 bg-background/80">
-                <h3 className="text-2xl font-bold mb-4 text-primary">{degustacia.nazov}</h3>
-                <p className="text-muted-foreground flex-grow mb-6">{degustacia.popis}</p>
-                <div className="mt-auto space-y-4 pt-6 border-t">
-                  <div className="flex items-center"><Wine className="mr-3 h-5 w-5 text-primary/80" /><span>{degustacia.pocetVzoriek}</span></div>
-                  <div className="flex items-center"><Clock className="mr-3 h-5 w-5 text-primary/80" /><span>{degustacia.trvanie}</span></div>
-                  <p className="font-bold text-2xl pt-2">{degustacia.cena}</p>
+              <div key={degustacia.nazov} className="relative border rounded-xl overflow-hidden flex flex-col transition-all duration-300 hover:shadow-2xl hover:border-primary/50 text-white min-h-[450px]">
+                <Image
+                  src={degustacia.obrazok}
+                  alt={`Pozadie pre ${degustacia.nazov}`}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  className="z-0 brightness-[0.4] group-hover:brightness-50 transition-all duration-300"
+                />
+                <div className="relative z-10 p-8 flex flex-col flex-grow bg-black/20">
+                  <h3 className="text-2xl font-bold mb-4 text-primary">{degustacia.nazov}</h3>
+                  <p className="flex-grow mb-6 text-white/90">{degustacia.popis}</p>
+                  <div className="mt-auto space-y-4 pt-6 border-t border-white/20">
+                    <div className="flex items-center"><Wine className="mr-3 h-5 w-5 text-primary/80" /><span>{degustacia.pocetVzoriek}</span></div>
+                    <div className="flex items-center"><Clock className="mr-3 h-5 w-5 text-primary/80" /><span>{degustacia.trvanie}</span></div>
+                    <p className="font-bold text-2xl pt-2">{degustacia.cena}</p>
+                  </div>
                 </div>
               </div>
             ))}

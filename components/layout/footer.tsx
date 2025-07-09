@@ -5,7 +5,7 @@ import { Facebook, Instagram, Mail, MapPin, Phone } from 'lucide-react';
 export const Footer = () => {
   return (
     <footer className="w-full border-t bg-card/50">
-      <div className="container grid grid-cols-1 md:grid-cols-4 gap-8 py-12">
+      <div className="container max-w-screen-2xl grid grid-cols-1 md:grid-cols-4 gap-8 py-12 px-4 md:px-6">
         
         {/* Column 1: Brand & Contact */}
         <div className="md:col-span-2">
@@ -47,7 +47,7 @@ export const Footer = () => {
 
       </div>
       <div className="border-t">
-        <div className="container py-4 text-center text-sm text-muted-foreground">
+        <div className="container max-w-screen-2xl py-4 text-center text-sm text-muted-foreground px-4 md:px-6">
             <p>&copy; {new Date().getFullYear()} Pútec. Všetky práva vyhradené.</p>
         </div>
       </div>
