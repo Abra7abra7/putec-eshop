@@ -35,7 +35,7 @@ export default function ProductForm({ product }: { product?: Product }) {
   const [slug, setSlug] = useState(product?.slug || '');
   const [description, setDescription] = useState(product?.description || '');
   const [price, setPrice] = useState(product?.price?.toString() || '');
-  const [manualSlug, setManualSlug] = useState(isEditing);
+  const [manualSlug, setManualSlug] = useState(false);
 
   // Stavy pre nové polia
   const [rocnik, setRocnik] = useState(product?.rocnik?.toString() || '');
@@ -48,13 +48,27 @@ export default function ProductForm({ product }: { product?: Product }) {
   const [imagePreview, setImagePreview] = useState<string | null>(product?.image_url || null);
 
   useEffect(() => {
-    if (!manualSlug) {
-      setSlug(slugify(name, { lower: true, strict: true }));
+    // Pri prvom načítaní komponentu v režime úpravy, 
+    // ak je slug prázdny alebo zhodný so slugifikovaným názvom, 
+    // umožníme automatické generovanie.
+    if (isEditing && product) {
+        const slugFromName = slugify(product.name, { lower: true, strict: true });
+        if (product.slug === slugFromName) {
+            setManualSlug(false);
+        } else {
+            // Ak sa slug nezhoduje, znamená to, že bol pravdepodobne upravený manuálne
+            setManualSlug(true);
+        }
     }
-  }, [name, manualSlug]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEditing]);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
+    const newName = e.target.value;
+    setName(newName);
+    if (!manualSlug) {
+      setSlug(slugify(newName, { lower: true, strict: true }));
+    }
   };
 
   const handleSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {

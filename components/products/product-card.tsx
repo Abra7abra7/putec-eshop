@@ -45,7 +45,11 @@ export const ProductCard = ({ product }: ProductCardProps) => {
       </Link>
       <div className="p-4 flex flex-col flex-grow">
         <div className="flex-grow mb-4">
-          <p className="text-sm text-muted-foreground">{product.year} | {product.wine_region}</p>
+          <div className="text-sm text-muted-foreground flex flex-wrap items-center gap-x-2">
+            {product.rocnik && <span>{product.rocnik}</span>}
+            {product.farba_vina && <span className="capitalize">{product.farba_vina}</span>}
+            {product.zvyskovy_cukor && <span className="capitalize">{product.zvyskovy_cukor}</span>}
+          </div>
           <h3 className="text-lg font-semibold truncate mt-1">
             <Link href={product.slug ? `/vino/${product.slug}` : '#'} className="transition-colors hover:text-primary">
               {product.name}
