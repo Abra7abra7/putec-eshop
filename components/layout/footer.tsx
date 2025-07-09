@@ -17,6 +17,7 @@ export const Footer = () => {
             <p className="flex items-center"><MapPin className="h-4 w-4 mr-2 shrink-0"/> Pezinská 154, 90201 Vinosady</p>
             <a href="mailto:info@vinoputec.sk" className="flex items-center hover:text-primary transition-colors"><Mail className="h-4 w-4 mr-2 shrink-0"/> info@vinoputec.sk</a>
             <a href="tel:+421911250400" className="flex items-center hover:text-primary transition-colors"><Phone className="h-4 w-4 mr-2 shrink-0"/> +421 911 250 400</a>
+            <a href="tel:+421902144074" className="flex items-center hover:text-primary transition-colors"><Phone className="h-4 w-4 mr-2 shrink-0"/> +421 902 144 074 (Zák. linka 8-20h)</a>
           </div>
         </div>
 

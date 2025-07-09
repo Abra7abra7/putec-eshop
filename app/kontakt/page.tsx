@@ -17,6 +17,7 @@ export default function KontaktPage() {
   const contactDetails = [
     { icon: Building, title: 'Adresa', lines: ['Pezinská 154', '90201 Vinosady'] },
     { icon: Phone, title: 'Telefón', lines: ['+421 911 250 400'], link: 'tel:+421911250400' },
+    { icon: Phone, title: 'Zákaznícka linka (8-20h)', lines: ['+421 902 144 074'], link: 'tel:+421902144074' },
     { icon: Mail, title: 'E-mail', lines: ['info@vinoputec.sk'], link: 'mailto:info@vinoputec.sk' },
     { icon: Clock, title: 'Otváracie Hodiny', lines: ['Po - Pia: 10:00 - 18:00', 'So: 10:00 - 14:00 (alebo podľa dohody)', 'Ne: Zatvorené'] },
   ];
@@ -44,7 +45,7 @@ export default function KontaktPage() {
       {/* Contact Details Section */}
       <section className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {contactDetails.map((detail) => (
               <div key={detail.title} className="bg-card p-8 rounded-xl shadow-md text-center flex flex-col items-center">
                 <div className="bg-primary/10 p-4 rounded-full mb-6">
@@ -55,7 +56,7 @@ export default function KontaktPage() {
                   {detail.link ? (
                     <a href={detail.link} className="hover:text-primary transition-colors">{detail.lines[0]}</a>
                   ) : (
-                    detail.lines.map(line => <p key={line}>{line}</p>)
+                    detail.lines.map((line) => <p key={line}>{line}</p>)
                   )}
                 </div>
               </div>

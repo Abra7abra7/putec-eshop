@@ -2,6 +2,15 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { AuthButton } from '@/components/auth-button';
 import { CartButton } from './cart-button';
+import { MobileNav } from './mobile-nav';
+
+const navLinks = [
+  { href: '/o-nas', label: 'O nás' },
+  { href: '/vino', label: 'E-shop' },
+  { href: '/degustacie', label: 'Degustácie' },
+  { href: '/ubytovanie', label: 'Ubytovanie' },
+  { href: '/kontakt', label: 'Kontakt' },
+];
 
 export const Header = () => {
   return (
@@ -10,16 +19,28 @@ export const Header = () => {
         <Link href="/" className="flex items-center">
           <Image src="/images/logoputec.svg" alt="Vinárstvo Pútec Logo" width={140} height={35} className="h-9 w-auto" />
         </Link>
+
+        {/* Desktop Navigation */}
         <nav className="hidden items-center space-x-6 text-sm font-medium md:flex">
-          <Link href="/o-nas" className="transition-colors hover:text-primary">O nás</Link>
-          <Link href="/vino" className="transition-colors hover:text-primary">E-shop</Link>
-          <Link href="/degustacie" className="transition-colors hover:text-primary">Degustácie</Link>
-          <Link href="/ubytovanie" className="transition-colors hover:text-primary">Ubytovanie</Link>
-          <Link href="/kontakt" className="transition-colors hover:text-primary">Kontakt</Link>
+          {navLinks.map((link) => (
+            <Link key={link.href} href={link.href} className="transition-colors hover:text-primary">
+              {link.label}
+            </Link>
+          ))}
         </nav>
-        <div className="flex items-center gap-2">
+
+        {/* Desktop Icons */}
+        <div className="hidden items-center gap-2 md:flex">
           <CartButton />
           <AuthButton />
+        </div>
+
+        {/* Mobile Navigation Wrapper */}
+        <div className="flex items-center md:hidden">
+          <MobileNav navLinks={navLinks}>
+            <AuthButton />
+            <CartButton />
+          </MobileNav>
         </div>
       </div>
     </header>
