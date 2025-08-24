@@ -25,7 +25,7 @@ export default function Home() {
           <h2 className='text-4xl font-bold text-white'>Ubytovanie v Srdci Viníc</h2>
           <p className='mt-4 max-w-3xl mx-auto text-lg text-zinc-300'>
             Zažite neopakovateľnú atmosféru nášho vinárstva a ubytujte sa v komfortných apartmánoch s výhľadom na vinice.
-          </div>
+          </p>
         </div>
       </div>
     </main>
