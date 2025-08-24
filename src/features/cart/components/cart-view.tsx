@@ -3,9 +3,11 @@
 import { Minus, Plus, ShoppingCart, X } from 'lucide-react';
 import { useCartStore } from '../store/use-cart-store';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
 
 export function CartView() {
   const { items, removeItem, updateQuantity, getTotalPrice, clearCart } = useCartStore();
+  const { toast } = useToast();
 
   if (items.length === 0) {
     return (
@@ -26,7 +28,14 @@ export function CartView() {
         <Button
           variant="ghost"
           size="sm"
-          onClick={clearCart}
+          onClick={() => {
+            clearCart();
+            toast({
+              title: "🗑️ Košík vyčistený",
+              description: "Všetky položky boli odobrané z košíka.",
+              variant: "destructive",
+            });
+          }}
           className="text-zinc-400 hover:text-white"
         >
           Vyčistiť
@@ -58,7 +67,16 @@ export function CartView() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                onClick={() => {
+                  updateQuantity(item.id, item.quantity - 1);
+                  if (item.quantity === 1) {
+                    toast({
+                      title: "➖ Položka odobraná",
+                      description: `${item.name} bol odobraný z košíka.`,
+                      variant: "destructive",
+                    });
+                  }
+                }}
                 className="h-8 w-8 p-0"
               >
                 <Minus className="h-4 w-4" />
@@ -69,7 +87,14 @@ export function CartView() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                onClick={() => {
+                  updateQuantity(item.id, item.quantity + 1);
+                  toast({
+                    title: "➕ Množstvo upravené",
+                    description: `Množstvo ${item.name} bolo zvýšené na ${item.quantity + 1}.`,
+                    variant: "default",
+                  });
+                }}
                 className="h-8 w-8 p-0"
               >
                 <Plus className="h-4 w-4" />
@@ -85,14 +110,21 @@ export function CartView() {
               </p>
             </div>
 
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => removeItem(item.id)}
-              className="h-8 w-8 p-0 text-zinc-400 hover:text-white"
-            >
-              <X className="h-4 w-4" />
-            </Button>
+                          <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  removeItem(item.id);
+                  toast({
+                    title: "❌ Položka odobraná",
+                    description: `${item.name} bol odobraný z košíka.`,
+                    variant: "destructive",
+                  });
+                }}
+                className="h-8 w-8 p-0 text-zinc-400 hover:text-white"
+              >
+                <X className="h-4 w-4" />
+              </Button>
           </div>
         ))}
       </div>

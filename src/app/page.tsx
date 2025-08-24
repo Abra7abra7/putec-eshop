@@ -1,4 +1,4 @@
-import { Products } from '@/features/pricing/components/products';
+import { Wines } from '@/features/wines/components/wines';
 
 export default function Home() {
   return (
@@ -15,7 +15,7 @@ export default function Home() {
         </div>
       </div>
 
-      <Products />
+      <Wines />
 
       {/* Accommodation Section */}
       <div id='ubytovanie' className='w-full bg-zinc-900 py-20'>

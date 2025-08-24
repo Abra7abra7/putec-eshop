@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { ProductWithPrices } from '../types';
 import { useCartStore } from '@/features/cart/store/use-cart-store';
+import { useToast } from '@/components/ui/use-toast';
 
 interface WineCardProps {
   wine: ProductWithPrices;
@@ -12,6 +13,7 @@ export function WineCard({ wine }: WineCardProps) {
   const price = wine.prices?.[0];
   const category = wine.wine_category;
   const addItem = useCartStore(state => state.addItem);
+  const { toast } = useToast();
 
   return (
     <div className='flex flex-col overflow-hidden rounded-lg border border-zinc-700 bg-zinc-800'>
@@ -58,15 +60,23 @@ export function WineCard({ wine }: WineCardProps) {
               <div className='mt-4 flex flex-col gap-2'>
                 <button 
                   className='w-full rounded-md bg-amber-600 px-4 py-2 font-semibold text-white transition hover:bg-amber-700'
-                  onClick={() => addItem({
-                    id: wine.id,
-                    name: wine.name,
-                    price: price?.unit_amount || 0,
-                    image: wine.image,
-                    wine_category: wine.wine_category?.name,
-                    vintage: wine.vintage || undefined,
-                    region: wine.region || undefined,
-                  })}
+                  onClick={() => {
+                    addItem({
+                      id: wine.id,
+                      name: wine.name,
+                      price: price?.unit_amount || 0,
+                      image: wine.image,
+                      wine_category: wine.wine_category?.name,
+                      vintage: wine.vintage || undefined,
+                      region: wine.region || undefined,
+                    });
+                    
+                    toast({
+                      title: "🍷 Víno pridané do košíka!",
+                      description: `${wine.name} bolo úspešne pridané do košíka.`,
+                      variant: "default",
+                    });
+                  }}
                 >
                   Pridať do košíka
                 </button>
