@@ -13,9 +13,9 @@ const NavLinks = () => (
     <Link href='/#degustacia' className='text-white hover:text-zinc-300'>
       Degustácie
     </Link>
-    <Link href='/#ubytovanie' className='text-white hover:text-zinc-300'>
-      Ubytovanie
-    </Link>
+                <Link href='/accommodation' className='text-white hover:text-zinc-300'>
+              Ubytovanie
+            </Link>
   </>
 );
 

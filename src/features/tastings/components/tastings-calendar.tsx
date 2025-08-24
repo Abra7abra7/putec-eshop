@@ -1,10 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Calendar, Clock, Users, Utensils, Bed, Wine } from 'lucide-react';
+import { Calendar, Clock, Users, Utensils, Bed, Wine, User, Mail, Phone, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
-import type { TastingPackage, AvailableTimeSlot } from '../types';
+import { createTastingCheckout } from '../actions/create-tasting-checkout';
+import type { TastingPackage, AvailableTimeSlot, BookingFormData } from '../types';
 
 interface TastingsCalendarProps {
   packages: TastingPackage[];
@@ -17,6 +20,14 @@ export function TastingsCalendar({ packages, timeSlots }: TastingsCalendarProps)
   const [selectedTime, setSelectedTime] = useState<string>('');
   const [selectedSession, setSelectedSession] = useState<AvailableTimeSlot['sessions'][0] | null>(null);
   const [showBookingForm, setShowBookingForm] = useState(false);
+  const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
+  const [formData, setFormData] = useState<BookingFormData>({
+    customer_name: '',
+    customer_email: '',
+    customer_phone: '',
+    number_of_people: 1,
+    special_requests: ''
+  });
   const { toast } = useToast();
 
   // Get available dates from timeSlots
@@ -78,6 +89,42 @@ export function TastingsCalendar({ packages, timeSlots }: TastingsCalendarProps)
 
   const getAvailableSpots = (session: AvailableTimeSlot['sessions'][0]) => {
     return session.max_capacity - session.current_bookings;
+  };
+
+  const handleCheckout = async () => {
+    if (!selectedSession) return;
+    
+    setIsCheckoutLoading(true);
+    try {
+      const result = await createTastingCheckout(selectedSession.id, formData);
+      
+      if (result.success && result.url) {
+        toast({
+          title: "🔄 Presmerovávam na Stripe",
+          description: "Presmerovávam vás na bezpečnú platobnú bránu...",
+          variant: "default",
+        });
+        
+        // Malé oneskorenie pre toast
+        setTimeout(() => {
+          window.location.href = result.url;
+        }, 1000);
+      } else {
+        toast({
+          title: "❌ Chyba pri checkout",
+          description: result.error || "Nepodarilo sa vytvoriť checkout session",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "❌ Chyba pri checkout",
+        description: "Nepodarilo sa spustiť checkout proces",
+        variant: "destructive",
+      });
+    } finally {
+      setIsCheckoutLoading(false);
+    }
   };
 
   return (
@@ -257,48 +304,121 @@ export function TastingsCalendar({ packages, timeSlots }: TastingsCalendarProps)
         </div>
       </div>
 
-      {/* Booking Form */}
-      {showBookingForm && selectedSession && (
-        <div className="mt-8 bg-zinc-800 rounded-lg p-6">
-          <h3 className="text-xl font-semibold text-white mb-4">
-            🎯 Rezervácia: {selectedSession.package?.name}
-          </h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h4 className="font-medium text-white mb-3">Detaily termínu</h4>
-              <div className="space-y-2 text-sm text-zinc-300">
-                <p><strong>Dátum:</strong> {formatDate(selectedSession.start_time)}</p>
-                <p><strong>Čas:</strong> {formatTime(selectedTime)}</p>
-                <p><strong>Trvanie:</strong> {selectedSession.package?.duration_minutes} minút</p>
-                <p><strong>Cena:</strong> {formatPrice(selectedSession.package?.price || 0)}</p>
-                <p><strong>Dostupné miesta:</strong> {getAvailableSpots(selectedSession)}</p>
-              </div>
-            </div>
-            
-            <div>
-              <h4 className="font-medium text-white mb-3">Ďalšie kroky</h4>
-              <p className="text-sm text-zinc-400 mb-4">
-                Pre dokončenie rezervácie budete presmerovaný na platobnú bránu Stripe.
-              </p>
-              
-              <Button 
-                className="w-full bg-amber-600 hover:bg-amber-700"
-                onClick={() => {
-                  toast({
-                    title: "🎯 Rezervácia pripravená",
-                    description: "Presmerovávam vás na platobnú bránu...",
-                    variant: "default",
-                  });
-                  // Tu by sme implementovali checkout pre degustáciu
-                }}
-              >
-                💳 Pokračovať k platbe
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+                   {/* Booking Form */}
+             {showBookingForm && selectedSession && (
+               <div className="mt-8 bg-zinc-800 rounded-lg p-6">
+                 <h3 className="text-xl font-semibold text-white mb-4">
+                   🎯 Rezervácia: {selectedSession.package?.name}
+                 </h3>
+                 
+                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                   {/* Formulár */}
+                   <div className="space-y-4">
+                     <h4 className="font-medium text-white mb-3">Kontaktné údaje</h4>
+                     
+                     <div>
+                       <label className="block text-sm font-medium text-zinc-300 mb-2">
+                         <User className="inline h-4 w-4 mr-2" />
+                         Meno a priezvisko *
+                       </label>
+                       <Input
+                         type="text"
+                         value={formData.customer_name}
+                         onChange={(e) => setFormData({...formData, customer_name: e.target.value})}
+                         placeholder="Vaše meno a priezvisko"
+                         className="bg-zinc-700 border-zinc-600 text-white"
+                         required
+                       />
+                     </div>
+                     
+                     <div>
+                       <label className="block text-sm font-medium text-zinc-300 mb-2">
+                         <Mail className="inline h-4 w-4 mr-2" />
+                         Email *
+                       </label>
+                       <Input
+                         type="email"
+                         value={formData.customer_email}
+                         onChange={(e) => setFormData({...formData, customer_email: e.target.value})}
+                         placeholder="vas@email.sk"
+                         className="bg-zinc-700 border-zinc-600 text-white"
+                         required
+                       />
+                     </div>
+                     
+                     <div>
+                       <label className="block text-sm font-medium text-zinc-300 mb-2">
+                         <Phone className="inline h-4 w-4 mr-2" />
+                         Telefón
+                       </label>
+                       <Input
+                         type="tel"
+                         value={formData.customer_phone}
+                         onChange={(e) => setFormData({...formData, customer_phone: e.target.value})}
+                         placeholder="+421 XXX XXX XXX"
+                         className="bg-zinc-700 border-zinc-600 text-white"
+                       />
+                     </div>
+                     
+                     <div>
+                       <label className="block text-sm font-medium text-zinc-300 mb-2">
+                         <Users className="inline h-4 w-4 mr-2" />
+                         Počet osôb *
+                       </label>
+                       <Input
+                         type="number"
+                         min="1"
+                         max={getAvailableSpots(selectedSession)}
+                         value={formData.number_of_people}
+                         onChange={(e) => setFormData({...formData, number_of_people: parseInt(e.target.value) || 1})}
+                         className="bg-zinc-700 border-zinc-600 text-white"
+                         required
+                       />
+                     </div>
+                     
+                     <div>
+                       <label className="block text-sm font-medium text-zinc-300 mb-2">
+                         <MessageSquare className="inline h-4 w-4 mr-2" />
+                         Špeciálne požiadavky
+                       </label>
+                       <Textarea
+                         value={formData.special_requests}
+                         onChange={(e) => setFormData({...formData, special_requests: e.target.value})}
+                         placeholder="Alergia, preferencie, poznámky..."
+                         className="bg-zinc-700 border-zinc-600 text-white"
+                         rows={3}
+                       />
+                     </div>
+                   </div>
+                   
+                   {/* Súhrn */}
+                   <div>
+                     <h4 className="font-medium text-white mb-3">Súhrn rezervácie</h4>
+                     <div className="space-y-2 text-sm text-zinc-300 mb-4">
+                       <p><strong>Dátum:</strong> {formatDate(selectedSession.start_time)}</p>
+                       <p><strong>Čas:</strong> {formatTime(selectedTime)}</p>
+                       <p><strong>Trvanie:</strong> {selectedSession.package?.duration_minutes} minút</p>
+                       <p><strong>Cena za osobu:</strong> {formatPrice(selectedSession.package?.price || 0)}</p>
+                       <p><strong>Počet osôb:</strong> {formData.number_of_people}</p>
+                       <p><strong>Celková cena:</strong> <span className="text-amber-400 font-bold">{formatPrice((selectedSession.package?.price || 0) * formData.number_of_people)}</span></p>
+                       <p><strong>Dostupné miesta:</strong> {getAvailableSpots(selectedSession)}</p>
+                     </div>
+                     
+                     <Button 
+                       className="w-full bg-amber-600 hover:bg-amber-700"
+                       disabled={isCheckoutLoading || !formData.customer_name || !formData.customer_email}
+                       onClick={handleCheckout}
+                     >
+                       {isCheckoutLoading ? 'Spracovávam...' : '💳 Pokračovať k platbe'}
+                     </Button>
+                     
+                     <p className="text-xs text-zinc-400 mt-2">
+                       * Povinné polia
+                     </p>
+                   </div>
+                 </div>
+               </div>
+             )}
     </div>
   );
 }

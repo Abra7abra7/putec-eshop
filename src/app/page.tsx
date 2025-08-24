@@ -19,15 +19,21 @@ export default function Home() {
       <Wines />
       <Tastings />
 
-      {/* Accommodation Section */}
-      <div id='ubytovanie' className='w-full bg-zinc-900 py-20'>
-        <div className='container mx-auto text-center'>
-          <h2 className='text-4xl font-bold text-white'>Ubytovanie v Srdci Viníc</h2>
-          <p className='mt-4 max-w-3xl mx-auto text-lg text-zinc-300'>
-            Zažite neopakovateľnú atmosféru nášho vinárstva a ubytujte sa v komfortných apartmánoch s výhľadom na vinice.
-          </p>
-        </div>
-      </div>
+                  {/* Accommodation Section */}
+            <div className='w-full bg-zinc-900 py-20'>
+              <div className='container mx-auto text-center'>
+                <h2 className='text-4xl font-bold text-white'>Ubytovanie v Srdci Viníc</h2>
+                <p className='mt-4 max-w-3xl mx-auto text-lg text-zinc-300 mb-8'>
+                  Zažite neopakovateľnú atmosféru nášho vinárstva a ubytujte sa v komfortných apartmánoch s výhľadom na vinice.
+                </p>
+                <a
+                  href='/accommodation'
+                  className='inline-block rounded-md bg-amber-600 px-8 py-3 font-semibold text-white transition hover:bg-amber-700'
+                >
+                  Zistiť Viac a Rezervovať
+                </a>
+              </div>
+            </div>
     </main>
   );
 }

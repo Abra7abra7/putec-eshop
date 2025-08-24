@@ -1,5 +1,5 @@
 import { getTastingPackages, getAvailableTimeSlots } from '../controllers/get-tastings';
-import { TastingsCalendar } from './tastings-calendar';
+import { TastingsCalendarAdvanced } from './tastings-calendar-advanced';
 
 export async function Tastings() {
   const packages = await getTastingPackages();
@@ -20,7 +20,7 @@ export async function Tastings() {
     <section id='degustacia' className='w-full bg-black py-20'>
       <div className='container mx-auto'>
         <h2 className='text-center text-4xl font-bold text-white mb-12'>Degustácie</h2>
-        <TastingsCalendar packages={packages} timeSlots={timeSlots} />
+        <TastingsCalendarAdvanced packages={packages} timeSlots={timeSlots} />
       </div>
     </section>
   );
