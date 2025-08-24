@@ -1,4 +1,5 @@
 import { Wines } from '@/features/wines/components/wines';
+import { Tastings } from '@/features/tastings/components/tastings';
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       </div>
 
       <Wines />
+      <Tastings />
 
       {/* Accommodation Section */}
       <div id='ubytovanie' className='w-full bg-zinc-900 py-20'>
@@ -23,15 +25,7 @@ export default function Home() {
           <h2 className='text-4xl font-bold text-white'>Ubytovanie v Srdci Viníc</h2>
           <p className='mt-4 max-w-3xl mx-auto text-lg text-zinc-300'>
             Zažite neopakovateľnú atmosféru nášho vinárstva a ubytujte sa v komfortných apartmánoch s výhľadom na vinice.
-          </p>
-          <a
-            href='https://www.booking.com/hotel/sk/putec-apartmany.sk.html'
-            target='_blank'
-            rel='noopener noreferrer'
-            className='mt-8 inline-block rounded-md bg-amber-600 px-8 py-3 font-semibold text-white transition hover:bg-amber-700'
-          >
-            Zistiť Viac a Rezervovať
-          </a>
+          </div>
         </div>
       </div>
     </main>

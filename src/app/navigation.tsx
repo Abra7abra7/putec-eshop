@@ -10,6 +10,9 @@ const NavLinks = () => (
     <Link href='/' className='text-white hover:text-zinc-300'>
       Vína
     </Link>
+    <Link href='/#degustacia' className='text-white hover:text-zinc-300'>
+      Degustácie
+    </Link>
     <Link href='/#ubytovanie' className='text-white hover:text-zinc-300'>
       Ubytovanie
     </Link>

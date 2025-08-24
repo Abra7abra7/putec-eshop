@@ -14,84 +14,66 @@ export type Database = {
   }
   public: {
     Tables: {
-      cart_items: {
+      accommodations: {
         Row: {
-          created_at: string
+          created_at: string | null
+          description: string | null
           id: number
-          price_id: string
-          product_id: string
-          quantity: number
-          updated_at: string
-          user_id: string
+          image_url: string | null
+          is_active: boolean | null
+          max_guests: number | null
+          name: string
+          price_per_night_cents: number | null
+          stripe_product_id: string | null
         }
         Insert: {
-          created_at?: string
+          created_at?: string | null
+          description?: string | null
           id?: number
-          price_id: string
-          product_id: string
-          quantity?: number
-          updated_at?: string
-          user_id: string
+          image_url?: string | null
+          is_active?: boolean | null
+          max_guests?: number | null
+          name: string
+          price_per_night_cents?: number | null
+          stripe_product_id?: string | null
         }
         Update: {
-          created_at?: string
+          created_at?: string | null
+          description?: string | null
           id?: number
-          price_id?: string
-          product_id?: string
-          quantity?: number
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "cart_items_price_id_fkey"
-            columns: ["price_id"]
-            isOneToOne: false
-            referencedRelation: "prices"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cart_items_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "products"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      customers: {
-        Row: {
-          id: string
-          stripe_customer_id: string | null
-        }
-        Insert: {
-          id: string
-          stripe_customer_id?: string | null
-        }
-        Update: {
-          id?: string
-          stripe_customer_id?: string | null
+          image_url?: string | null
+          is_active?: boolean | null
+          max_guests?: number | null
+          name?: string
+          price_per_night_cents?: number | null
+          stripe_product_id?: string | null
         }
         Relationships: []
       }
       order_items: {
         Row: {
-          order_id: string
+          id: number
+          order_id: number
           price_id: string
           product_id: string
-          quantity: number | null
+          quantity: number
+          unit_price: number
         }
         Insert: {
-          order_id: string
+          id?: number
+          order_id: number
           price_id: string
           product_id: string
-          quantity?: number | null
+          quantity: number
+          unit_price: number
         }
         Update: {
-          order_id?: string
+          id?: number
+          order_id?: number
           price_id?: string
           product_id?: string
-          quantity?: number | null
+          quantity?: number
+          unit_price?: number
         }
         Relationships: [
           {
@@ -119,33 +101,33 @@ export type Database = {
       }
       orders: {
         Row: {
-          amount_total: number | null
           created_at: string
-          currency: string | null
           email: string | null
-          id: string
-          status: string | null
-          stripe_checkout_session_id: string | null
+          id: number
+          order_type: string | null
+          status: string
+          stripe_session_id: string
+          total_amount: number
           user_id: string | null
         }
         Insert: {
-          amount_total?: number | null
           created_at?: string
-          currency?: string | null
           email?: string | null
-          id?: string
-          status?: string | null
-          stripe_checkout_session_id?: string | null
+          id?: number
+          order_type?: string | null
+          status?: string
+          stripe_session_id: string
+          total_amount: number
           user_id?: string | null
         }
         Update: {
-          amount_total?: number | null
           created_at?: string
-          currency?: string | null
           email?: string | null
-          id?: string
-          status?: string | null
-          stripe_checkout_session_id?: string | null
+          id?: number
+          order_type?: string | null
+          status?: string
+          stripe_session_id?: string
+          total_amount?: number
           user_id?: string | null
         }
         Relationships: []
@@ -156,12 +138,9 @@ export type Database = {
           currency: string | null
           description: string | null
           id: string
-          interval: Database["public"]["Enums"]["pricing_plan_interval"] | null
-          interval_count: number | null
           metadata: Json | null
           product_id: string | null
-          trial_period_days: number | null
-          type: Database["public"]["Enums"]["pricing_type"] | null
+          type: string | null
           unit_amount: number | null
         }
         Insert: {
@@ -169,12 +148,9 @@ export type Database = {
           currency?: string | null
           description?: string | null
           id: string
-          interval?: Database["public"]["Enums"]["pricing_plan_interval"] | null
-          interval_count?: number | null
           metadata?: Json | null
           product_id?: string | null
-          trial_period_days?: number | null
-          type?: Database["public"]["Enums"]["pricing_type"] | null
+          type?: string | null
           unit_amount?: number | null
         }
         Update: {
@@ -182,12 +158,9 @@ export type Database = {
           currency?: string | null
           description?: string | null
           id?: string
-          interval?: Database["public"]["Enums"]["pricing_plan_interval"] | null
-          interval_count?: number | null
           metadata?: Json | null
           product_id?: string | null
-          trial_period_days?: number | null
-          type?: Database["public"]["Enums"]["pricing_type"] | null
+          type?: string | null
           unit_amount?: number | null
         }
         Relationships: [
@@ -203,27 +176,281 @@ export type Database = {
       products: {
         Row: {
           active: boolean | null
+          alcohol_content: number | null
           description: string | null
+          gs1_code: string | null
           id: string
           image: string | null
           metadata: Json | null
           name: string | null
+          region: string | null
+          stock_quantity: number | null
+          sweetness_level: string | null
+          vintage: number | null
+          wine_category_id: number | null
         }
         Insert: {
           active?: boolean | null
+          alcohol_content?: number | null
           description?: string | null
+          gs1_code?: string | null
           id: string
           image?: string | null
           metadata?: Json | null
           name?: string | null
+          region?: string | null
+          stock_quantity?: number | null
+          sweetness_level?: string | null
+          vintage?: number | null
+          wine_category_id?: number | null
         }
         Update: {
           active?: boolean | null
+          alcohol_content?: number | null
           description?: string | null
+          gs1_code?: string | null
           id?: string
           image?: string | null
           metadata?: Json | null
           name?: string | null
+          region?: string | null
+          stock_quantity?: number | null
+          sweetness_level?: string | null
+          vintage?: number | null
+          wine_category_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_wine_category_id_fkey"
+            columns: ["wine_category_id"]
+            isOneToOne: false
+            referencedRelation: "wine_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reservations: {
+        Row: {
+          accommodation_id: number | null
+          check_in_date: string
+          check_out_date: string
+          created_at: string | null
+          guest_count: number
+          id: number
+          status: string | null
+          stripe_session_id: string | null
+          total_price_cents: number
+          user_id: string | null
+        }
+        Insert: {
+          accommodation_id?: number | null
+          check_in_date: string
+          check_out_date: string
+          created_at?: string | null
+          guest_count: number
+          id?: number
+          status?: string | null
+          stripe_session_id?: string | null
+          total_price_cents: number
+          user_id?: string | null
+        }
+        Update: {
+          accommodation_id?: number | null
+          check_in_date?: string
+          check_out_date?: string
+          created_at?: string | null
+          guest_count?: number
+          id?: number
+          status?: string | null
+          stripe_session_id?: string | null
+          total_price_cents?: number
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reservations_accommodation_id_fkey"
+            columns: ["accommodation_id"]
+            isOneToOne: false
+            referencedRelation: "accommodations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tasting_bookings: {
+        Row: {
+          created_at: string | null
+          customer_email: string
+          customer_name: string
+          customer_phone: string | null
+          id: number
+          number_of_people: number
+          session_id: number | null
+          special_requests: string | null
+          status: string | null
+          stripe_payment_intent_id: string | null
+          total_price: number
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          customer_email: string
+          customer_name: string
+          customer_phone?: string | null
+          id?: number
+          number_of_people?: number
+          session_id?: number | null
+          special_requests?: string | null
+          status?: string | null
+          stripe_payment_intent_id?: string | null
+          total_price: number
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          customer_email?: string
+          customer_name?: string
+          customer_phone?: string | null
+          id?: number
+          number_of_people?: number
+          session_id?: number | null
+          special_requests?: string | null
+          status?: string | null
+          stripe_payment_intent_id?: string | null
+          total_price?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tasting_bookings_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "tasting_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tasting_packages: {
+        Row: {
+          active: boolean | null
+          created_at: string | null
+          description: string | null
+          duration_minutes: number
+          id: number
+          includes_accommodation: boolean | null
+          includes_food: boolean | null
+          max_people: number
+          name: string
+          price: number
+          updated_at: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string | null
+          description?: string | null
+          duration_minutes?: number
+          id?: number
+          includes_accommodation?: boolean | null
+          includes_food?: boolean | null
+          max_people?: number
+          name: string
+          price: number
+          updated_at?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string | null
+          description?: string | null
+          duration_minutes?: number
+          id?: number
+          includes_accommodation?: boolean | null
+          includes_food?: boolean | null
+          max_people?: number
+          name?: string
+          price?: number
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      tasting_sessions: {
+        Row: {
+          created_at: string | null
+          current_bookings: number | null
+          end_time: string
+          id: number
+          max_capacity: number
+          notes: string | null
+          package_id: number | null
+          start_time: string
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          current_bookings?: number | null
+          end_time: string
+          id?: number
+          max_capacity: number
+          notes?: string | null
+          package_id?: number | null
+          start_time: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          current_bookings?: number | null
+          end_time?: string
+          id?: number
+          max_capacity?: number
+          notes?: string | null
+          package_id?: number | null
+          start_time?: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tasting_sessions_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "tasting_packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tastings: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: number
+          image_url: string | null
+          is_active: boolean | null
+          name: string
+          price_cents: number | null
+          stripe_product_id: string | null
+          wine_count: number
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: number
+          image_url?: string | null
+          is_active?: boolean | null
+          name: string
+          price_cents?: number | null
+          stripe_product_id?: string | null
+          wine_count: number
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: number
+          image_url?: string | null
+          is_active?: boolean | null
+          name?: string
+          price_cents?: number | null
+          stripe_product_id?: string | null
+          wine_count?: number
         }
         Relationships: []
       }
@@ -251,16 +478,39 @@ export type Database = {
         }
         Relationships: []
       }
+      wine_categories: {
+        Row: {
+          color: string
+          created_at: string | null
+          id: number
+          name: string
+        }
+        Insert: {
+          color: string
+          created_at?: string | null
+          id?: number
+          name: string
+        }
+        Update: {
+          color?: string
+          created_at?: string | null
+          id?: number
+          name?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_available_sessions: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
     }
     Enums: {
-      pricing_plan_interval: "day" | "week" | "month" | "year"
-      pricing_type: "one_time" | "recurring"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -387,9 +637,6 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {
-      pricing_plan_interval: ["day", "week", "month", "year"],
-      pricing_type: ["one_time", "recurring"],
-    },
+    Enums: {},
   },
 } as const
