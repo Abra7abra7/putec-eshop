@@ -1,56 +1,91 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
+import { persist } from 'zustand/middleware';
 
-import { ProductWithPrices } from '@/features/pricing/types';
-
-interface CartItem extends ProductWithPrices {
+export interface CartItem {
+  id: string;
+  name: string;
+  price: number; // in cents
+  image: string | null;
   quantity: number;
+  wine_category?: string;
+  vintage?: number;
+  region?: string;
 }
 
-interface CartState {
-  cart: CartItem[];
-  addToCart: (product: ProductWithPrices) => void;
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+interface CartStore {
+  items: CartItem[];
+  addItem: (item: Omit<CartItem, 'quantity'>) => void;
+  removeItem: (id: string) => void;
+  updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
+  getTotalItems: () => number;
+  getTotalPrice: () => number;
 }
 
-export const useCartStore = create<CartState>()(
+export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
-      cart: [],
-      addToCart: (product) => {
-        const cart = get().cart;
-        const productInCart = cart.find((item) => item.id === product.id);
-
-        if (productInCart) {
-          const updatedCart = cart.map((item) =>
-            item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-          );
-          set({ cart: updatedCart });
-        } else {
-          set({ cart: [...cart, { ...product, quantity: 1 }] });
-        }
-      },
-      removeFromCart: (productId) => {
-        set({ cart: get().cart.filter((item) => item.id !== productId) });
-      },
-      updateQuantity: (productId, quantity) => {
-        if (quantity < 1) {
-          get().removeFromCart(productId);
+      items: [],
+      
+      addItem: (item) => {
+        const { items } = get();
+        const existingItem = items.find(i => i.id === item.id);
+        
+        if (existingItem) {
+          set({
+            items: items.map(i => 
+              i.id === item.id 
+                ? { ...i, quantity: i.quantity + 1 }
+                : i
+            )
+          });
         } else {
           set({
-            cart: get().cart.map((item) =>
-              item.id === productId ? { ...item, quantity } : item
-            ),
+            items: [...items, { ...item, quantity: 1 }]
           });
         }
       },
-      clearCart: () => set({ cart: [] }),
+      
+      removeItem: (id) => {
+        const { items } = get();
+        set({
+          items: items.filter(i => i.id !== id)
+        });
+      },
+      
+      updateQuantity: (id, quantity) => {
+        if (quantity <= 0) {
+          get().removeItem(id);
+          return;
+        }
+        
+        const { items } = get();
+        set({
+          items: items.map(i => 
+            i.id === id 
+              ? { ...i, quantity }
+              : i
+          )
+        });
+      },
+      
+      clearCart: () => {
+        set({ items: [] });
+      },
+      
+      getTotalItems: () => {
+        const { items } = get();
+        return items.reduce((total, item) => total + item.quantity, 0);
+      },
+      
+      getTotalPrice: () => {
+        const { items } = get();
+        return items.reduce((total, item) => total + (item.price * item.quantity), 0);
+      },
     }),
     {
-      name: 'cart-storage',
-      storage: createJSONStorage(() => localStorage),
+      name: 'wine-cart',
+      version: 1,
     }
   )
 );

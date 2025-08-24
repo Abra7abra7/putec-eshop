@@ -1,98 +1,116 @@
 'use client';
 
-import { useState } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-
+import { Minus, Plus, ShoppingCart, X } from 'lucide-react';
+import { useCartStore } from '../store/use-cart-store';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useCartStore } from '@/features/cart/store/use-cart-store';
-import { createCheckoutAction } from '@/features/pricing/actions/create-checkout-action';
 
 export function CartView() {
-  const router = useRouter();
-  const { cart, updateQuantity, removeFromCart, clearCart } = useCartStore();
-  const [isLoading, setIsLoading] = useState(false);
+  const { items, removeItem, updateQuantity, getTotalPrice, clearCart } = useCartStore();
 
-  const subtotal = cart.reduce((acc, item) => {
-    return acc + (item.prices[0].unit_amount || 0) * item.quantity;
-  }, 0);
-
-    const handleCheckout = async () => {
-    setIsLoading(true);
-    const response = await createCheckoutAction({ cartItems: cart });
-
-    if (response.redirectTo) {
-      router.push(response.redirectTo);
-      return;
-    }
-
-    if (response.checkoutUrl) {
-      router.push(response.checkoutUrl);
-      clearCart();
-    } else if (response.error) {
-      // TODO: Add toast notification for error
-      console.error(response.error);
-    }
-    setIsLoading(false);
-  };
-
-  if (cart.length === 0) {
+  if (items.length === 0) {
     return (
-      <div className='mt-8 text-center'>
-        <p className='text-lg'>Váš košík je prázdny.</p>
-        <Button asChild className='mt-4'>
-          <Link href='/'>Pokračovať v nákupe</Link>
-        </Button>
+      <div className="p-6 text-center">
+        <ShoppingCart className="mx-auto h-12 w-12 text-zinc-400" />
+        <h3 className="mt-4 text-lg font-medium text-white">Košík je prázdny</h3>
+        <p className="mt-2 text-sm text-zinc-400">
+          Pridajte si vína do košíka a začnite nakupovať.
+        </p>
       </div>
     );
   }
 
   return (
-    <div className='mt-8 grid grid-cols-1 gap-8 lg:grid-cols-3'>
-      <div className='lg:col-span-2'>
-        <ul className='divide-y divide-zinc-700'>
-          {cart.map((item) => (
-            <li key={item.id} className='flex items-center gap-4 py-4'>
-              <Image
-                src={item.image || '/images/wine-placeholder.jpg'}
-                alt={item.name || 'Obrázok produktu'}
-                width={80}
-                height={80}
-                className='rounded-md'
-              />
-              <div className='flex-1'>
-                <p className='font-semibold'>{item.name}</p>
-                <p className='text-zinc-400'>€{(item.prices[0].unit_amount || 0) / 100}</p>
-              </div>
-              <div className='flex items-center gap-2'>
-                <Input
-                  type='number'
-                  value={item.quantity}
-                  onChange={(e) => updateQuantity(item.id, parseInt(e.target.value, 10))}
-                />
-                <Button variant='outline' size='icon' onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</Button>
-              </div>
-              <Button variant='destructive' onClick={() => removeFromCart(item.id)}>🗑️</Button>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className='rounded-lg border border-zinc-700 bg-zinc-800 p-6'>
-        <h2 className='text-2xl font-bold'>Súhrn objednávky</h2>
-        <div className='mt-4 flex justify-between'>
-          <span>Medzisúčet</span>
-          <span>€{subtotal / 100}</span>
-        </div>
+    <div className="p-6">
+      <div className="flex items-center justify-between border-b border-zinc-700 pb-4">
+        <h3 className="text-lg font-medium text-white">Košík ({items.length} položiek)</h3>
         <Button
-          className='mt-6 w-full'
-          variant='sexy'
-          disabled={isLoading}
-          onClick={handleCheckout}
+          variant="ghost"
+          size="sm"
+          onClick={clearCart}
+          className="text-zinc-400 hover:text-white"
         >
-          {isLoading ? 'Spracúva sa...' : 'Pokračovať k platbe'}
+          Vyčistiť
         </Button>
+      </div>
+
+      <div className="mt-4 space-y-4">
+        {items.map((item) => (
+          <div key={item.id} className="flex items-center gap-4 rounded-lg border border-zinc-700 p-4">
+            {item.image && (
+              <img
+                src={item.image}
+                alt={item.name}
+                className="h-16 w-16 rounded object-cover"
+              />
+            )}
+            
+            <div className="flex-1">
+              <h4 className="font-medium text-white">{item.name}</h4>
+              {item.vintage && (
+                <p className="text-sm text-zinc-400">Ročník: {item.vintage}</p>
+              )}
+              {item.region && (
+                <p className="text-sm text-zinc-400">Oblasť: {item.region}</p>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                className="h-8 w-8 p-0"
+              >
+                <Minus className="h-4 w-4" />
+              </Button>
+              
+              <span className="w-8 text-center text-white">{item.quantity}</span>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                className="h-8 w-8 p-0"
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <div className="text-right">
+              <p className="font-medium text-white">
+                €{((item.price * item.quantity) / 100).toFixed(2)}
+              </p>
+              <p className="text-sm text-zinc-400">
+                €{(item.price / 100).toFixed(2)} / ks
+              </p>
+            </div>
+
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => removeItem(item.id)}
+              className="h-8 w-8 p-0 text-zinc-400 hover:text-white"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-6 border-t border-zinc-700 pt-4">
+        <div className="flex items-center justify-between text-lg font-medium text-white">
+          <span>Celková suma:</span>
+          <span>€{(getTotalPrice() / 100).toFixed(2)}</span>
+        </div>
+        
+        <div className="mt-4 space-y-2">
+          <Button className="w-full bg-amber-600 hover:bg-amber-700">
+            Pokračovať v objednávke
+          </Button>
+          <Button variant="outline" className="w-full">
+            Pokračovať v nákupe
+          </Button>
+        </div>
       </div>
     </div>
   );
