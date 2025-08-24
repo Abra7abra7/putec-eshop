@@ -1,13 +1,17 @@
 'use client';
 
+import { useState } from 'react';
+import Link from 'next/link';
 import { Minus, Plus, ShoppingCart, X } from 'lucide-react';
 import { useCartStore } from '../store/use-cart-store';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
+import { createCheckoutSession } from '@/features/checkout/actions/create-checkout-session';
 
 export function CartView() {
   const { items, removeItem, updateQuantity, getTotalPrice, clearCart } = useCartStore();
   const { toast } = useToast();
+  const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
 
   if (items.length === 0) {
     return (
@@ -136,11 +140,47 @@ export function CartView() {
         </div>
         
         <div className="mt-4 space-y-2">
-          <Button className="w-full bg-amber-600 hover:bg-amber-700">
-            Pokračovať v objednávke
+          <Button 
+            className="w-full bg-amber-600 hover:bg-amber-700"
+            disabled={isCheckoutLoading}
+            onClick={async () => {
+              setIsCheckoutLoading(true);
+              try {
+                const result = await createCheckoutSession(items);
+                if (result.success && result.url) {
+                  toast({
+                    title: "🔄 Presmerovávam na Stripe",
+                    description: "Presmerovávam vás na bezpečnú platobnú bránu...",
+                    variant: "default",
+                  });
+                  // Malé oneskorenie pre toast
+                  setTimeout(() => {
+                    window.location.href = result.url;
+                  }, 1000);
+                } else {
+                  toast({
+                    title: "❌ Chyba pri checkout",
+                    description: result.error || "Nepodarilo sa vytvoriť checkout session",
+                    variant: "destructive",
+                  });
+                }
+              } catch (error) {
+                toast({
+                  title: "❌ Chyba pri checkout",
+                  description: "Nepodarilo sa spustiť checkout proces",
+                  variant: "destructive",
+                });
+              } finally {
+                setIsCheckoutLoading(false);
+              }
+            }}
+          >
+            {isCheckoutLoading ? 'Spracovávam...' : '💳 Pokračovať v objednávke'}
           </Button>
-          <Button variant="outline" className="w-full">
-            Pokračovať v nákupe
+          <Button variant="outline" className="w-full" asChild>
+            <Link href="/">
+              Pokračovať v nákupe
+            </Link>
           </Button>
         </div>
       </div>
