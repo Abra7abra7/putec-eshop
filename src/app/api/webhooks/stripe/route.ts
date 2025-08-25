@@ -1,129 +1,168 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { headers } from 'next/headers';
 import Stripe from 'stripe';
-
-import { stripeAdmin } from '@/libs/stripe/stripe-admin';
 import { supabaseAdminClient } from '@/libs/supabase/supabase-admin';
-import { getOrCreateCustomer } from '@/features/account/controllers/get-or-create-customer';
-import { sendOrderConfirmation } from '@/features/emails/controllers/send-order-confirmation';
 
-const relevantEvents = new Set(['checkout.session.completed']);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2023-10-16',
+});
 
-export async function POST(req: Request) {
-  console.log('--- RELOADED WEBHOOK: VERSION 2 ---');
-  const body = await req.text();
-      const sig = req.headers.get('Stripe-Signature') as string;
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-  let event;
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
+export async function POST(request: NextRequest) {
   try {
-    if (!sig || !webhookSecret) return;
-    event = stripeAdmin.webhooks.constructEvent(body, sig, webhookSecret);
-  } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
-    console.log(`❌ Error message: ${err.message}`);
-    return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
-  }
+    const body = await request.text();
+    const headersList = await headers();
+    const signature = headersList.get('stripe-signature')!;
 
-  if (relevantEvents.has(event.type)) {
+    let event: Stripe.Event;
+
+    try {
+      event = stripe.webhooks.constructEvent(body, signature, endpointSecret);
+    } catch (err) {
+      console.error('❌ Webhook signature verification failed:', err);
+      return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
+    }
+
+    console.log('✅ Webhook event received:', event.type);
+
     try {
       switch (event.type) {
-        case 'checkout.session.completed': {
-          const checkoutSession = event.data.object;
-          const supabase = supabaseAdminClient;
-
-          // Prevent duplicate orders
-          const { data: existingOrder } = await supabase
-            .from('orders')
-            .select('id')
-            .eq('stripe_checkout_session_id', checkoutSession.id)
-            .single();
-
-          if (existingOrder) {
-            console.log(`Order with session ID ${checkoutSession.id} already exists. Skipping.`);
-            return new Response('Webhook Handled', { status: 200 });
-          }
-
-          const customerId = await getOrCreateCustomer({
-            userId: checkoutSession.metadata?.userId ?? null,
-            email: checkoutSession.customer_details?.email as string,
-          });
-
-          const lineItems = await stripeAdmin.checkout.sessions.listLineItems(checkoutSession.id, { expand: ['data.price.product'] });
-
-          // Create order in DB
-          const { data: order, error: orderError } = await supabase
-            .from('orders')
-            .insert({
-              user_id: checkoutSession.metadata?.userId || null,
-              stripe_checkout_session_id: checkoutSession.id,
-              amount_total: checkoutSession.amount_total,
-              currency: checkoutSession.currency,
-              status: 'paid',
-              email: checkoutSession.customer_details?.email,
-            })
-            .select()
-            .single();
-
-          if (orderError) {
-            console.error('Order creation error:', orderError);
-            throw new Error(`Failed to create order: ${orderError.message}`);
-          }
-
-          // Create order items in DB
-          const orderItemsToInsert = lineItems.data.map((item) => {
-            const product = item.price?.product as Stripe.Product;
-            return {
-              order_id: order.id,
-              product_id: product.id,
-              price_id: item.price?.id ?? '',
-              quantity: item.quantity ?? 0,
-            };
-          });
-
-          const { data: createdOrderItems, error: orderItemsError } = await supabase
-            .from('order_items')
-            .insert(orderItemsToInsert)
-            .select();
-
-          if (orderItemsError) {
-            throw new Error(`Failed to create order items: ${orderItemsError.message}`);
-          }
-
-          if (!createdOrderItems) {
-            throw new Error('Failed to retrieve created order items.');
-          }
-
-          let invoiceUrl: string | null = null;
-
-          if (checkoutSession.payment_intent) {
-            const paymentIntent = await stripeAdmin.paymentIntents.retrieve(
-              checkoutSession.payment_intent as string
-            );
-            if (paymentIntent.invoice) {
-              const invoice = await stripeAdmin.invoices.retrieve(paymentIntent.invoice as string);
-              invoiceUrl = invoice.hosted_invoice_url ?? null;
-            }
-          }
-
-          // Send confirmation email
-          await sendOrderConfirmation(
-            {
-              ...order,
-              id: order.id, // ID is already a string (UUID)
-              invoiceUrl,
-            },
-            createdOrderItems
-          );
-
+        case 'product.created':
+          await handleProductSync(event.data.object as Stripe.Product);
           break;
-        }
+        case 'product.updated':
+          await handleProductSync(event.data.object as Stripe.Product);
+          break;
+        case 'product.deleted':
+          await handleProductDeletion(event.data.object as Stripe.Product);
+          break;
+        case 'price.created':
+          await handlePriceSync(event.data.object as Stripe.Price);
+          break;
+        case 'price.updated':
+          await handlePriceSync(event.data.object as Stripe.Price);
+          break;
+        case 'price.deleted':
+          await handlePriceDeletion(event.data.object as Stripe.Price);
+          break;
         default:
-          throw new Error('Unhandled relevant event!');
+          console.log('⚠️ Unhandled event type:', event.type);
       }
     } catch (error) {
-      console.log(error);
-      return new NextResponse('Webhook handler failed. View your nextjs function logs.', { status: 400 });
+      console.error('❌ Chyba pri spracovaní webhook eventu:', error);
+      return NextResponse.json({ error: 'Webhook processing failed' }, { status: 500 });
     }
-  }
 
-  return NextResponse.json({ received: true });
+    return NextResponse.json({ received: true });
+  } catch (error) {
+    console.error('❌ Neočakávaná chyba v webhook handleri:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
+
+async function handleProductSync(product: Stripe.Product) {
+  try {
+    console.log('🔄 Synchronizujem produkt:', product.id);
+
+    // Aktualizovať alebo vytvoriť produkt v Supabase
+    const { error } = await supabaseAdminClient
+      .from('products')
+      .upsert({
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        image: product.images?.[0] || null,
+        active: product.active,
+        metadata: product.metadata,
+        updated_at: new Date().toISOString()
+      }, {
+        onConflict: 'id'
+      });
+
+    if (error) {
+      console.error('❌ Chyba pri synchronizácii produktu:', error);
+      throw error;
+    }
+
+    console.log('✅ Produkt synchronizovaný:', product.id);
+  } catch (error) {
+    console.error('❌ Chyba pri synchronizácii produktu:', error);
+    throw error;
+  }
+}
+
+async function handleProductDeletion(product: Stripe.Product) {
+  try {
+    console.log('🗑️ Mažem produkt:', product.id);
+
+    // Vymazať produkt zo Supabase
+    const { error } = await supabaseAdminClient
+      .from('products')
+      .delete()
+      .eq('id', product.id);
+
+    if (error) {
+      console.error('❌ Chyba pri mazaní produktu:', error);
+      throw error;
+    }
+
+    console.log('✅ Produkt vymazaný:', product.id);
+  } catch (error) {
+    console.error('❌ Chyba pri mazaní produktu:', error);
+    throw error;
+  }
+}
+
+async function handlePriceSync(price: Stripe.Price) {
+  try {
+    console.log('🔄 Synchronizujem cenu:', price.id);
+
+    // Aktualizovať alebo vytvoriť cenu v Supabase
+    const { error } = await supabaseAdminClient
+      .from('prices')
+      .upsert({
+        id: price.id,
+        product_id: price.product as string,
+        currency: price.currency,
+        unit_amount: price.unit_amount,
+        active: price.active,
+        metadata: price.metadata,
+        created_at: new Date().toISOString()
+      }, {
+        onConflict: 'id'
+      });
+
+    if (error) {
+      console.error('❌ Chyba pri synchronizácii ceny:', error);
+      throw error;
+    }
+
+    console.log('✅ Cena synchronizovaná:', price.id);
+  } catch (error) {
+    console.error('❌ Chyba pri synchronizácii ceny:', error);
+    throw error;
+  }
+}
+
+async function handlePriceDeletion(price: Stripe.Price) {
+  try {
+    console.log('🗑️ Mažem cenu:', price.id);
+
+    // Vymazať cenu zo Supabase
+    const { error } = await supabaseAdminClient
+      .from('prices')
+      .delete()
+      .eq('id', price.id);
+
+    if (error) {
+      console.error('❌ Chyba pri mazaní ceny:', error);
+      throw error;
+    }
+
+    console.log('✅ Cena vymazaná:', price.id);
+  } catch (error) {
+    console.error('❌ Chyba pri mazaní ceny:', error);
+    throw error;
+  }
 }
